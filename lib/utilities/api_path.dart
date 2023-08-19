@@ -1,5 +1,6 @@
 class ApiPath {
   static String products() => 'products/';
+  static String deletenawaqes(String uid) => 'nawaqes/';
   static String nawaqes() => 'nawaqes/';
   static String deliveryMethods() => 'deliveryMethods/';
   // static String addingNawaqesModle(NawaqesModel nawaqesModel) => 'addingNawaqesModle/';

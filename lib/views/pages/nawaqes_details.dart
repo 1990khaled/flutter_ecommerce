@@ -1,37 +1,11 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/nawqes.dart';
 import 'package:flutter_ecommerce/utilities/routes.dart';
 
-class NawaqestDetails extends StatefulWidget {
+class NawaqestDetails extends StatelessWidget {
   final ShowingNawaqesModel nawaqes;
-  const NawaqestDetails({Key? key, required this.nawaqes}) : super(key: key);
-
-  @override
-  State<NawaqestDetails> createState() => _NawaqestDetailsState();
-}
-
-class _NawaqestDetailsState extends State<NawaqestDetails> {
-  bool isFavorite = false;
-
-  // Future<void> _addToCart(Database database) async {
-  //   try {
-  //     final addToCartProduct = AddToCartModel(
-  //       id: documentIdFromLocalData(),
-  //       title: widget.nawaqes.title,
-  //       price: widget.nawaqes.price,
-  //       productId: widget.nawaqes.id,
-  //       imgUrl: widget.nawaqes.imgUrl,
-  //       size: dropdownValue,
-  //     );
-  //     await database.addToCart(addToCartProduct);
-  //   } catch (e) {
-  //     return MainDialog(
-  //       context: context,
-  //       title: 'Error',
-  //       content: 'Couldn\'t adding to the cart, please try again!',
-  //     ).showAlertDialog();
-  //   }
-  // }
+ const NawaqestDetails({Key? key, required this.nawaqes}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +15,16 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.nawaqes.title,
+          nawaqes.title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              // _docReference.delete();
+            },
             icon: const Icon(
-              Icons.share,
+              Icons.delete,
             ),
           ),
         ],
@@ -82,7 +58,7 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$${widget.nawaqes.price}',
+                            '\$${nawaqes.price}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
@@ -91,7 +67,7 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
                                 ),
                           ),
                           Text(
-                            widget.nawaqes.title,
+                            nawaqes.title,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall!
@@ -106,7 +82,7 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            " ${widget.nawaqes.ammount.toString()} الكمية",
+                            " ${nawaqes.ammount.toString()} الكمية",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
@@ -117,7 +93,7 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Text(
-                              'اسم المندوب ${widget.nawaqes.actorName}',
+                              'اسم المندوب ${nawaqes.actorName}',
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall!
@@ -133,7 +109,7 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          "اسم العميل ${widget.nawaqes.description}",
+                          "اسم العميل ${nawaqes.description}",
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
@@ -154,3 +130,25 @@ class _NawaqestDetailsState extends State<NawaqestDetails> {
     );
   }
 }
+
+
+
+  // Future<void> _addToCart(Database database) async {
+  //   try {
+  //     final addToCartProduct = AddToCartModel(
+  //       id: documentIdFromLocalData(),
+  //       title: widget.nawaqes.title,
+  //       price: widget.nawaqes.price,
+  //       productId: widget.nawaqes.id,
+  //       imgUrl: widget.nawaqes.imgUrl,
+  //       size: dropdownValue,
+  //     );
+  //     await database.addToCart(addToCartProduct);
+  //   } catch (e) {
+  //     return MainDialog(
+  //       context: context,
+  //       title: 'Error',
+  //       content: 'Couldn\'t adding to the cart, please try again!',
+  //     ).showAlertDialog();
+  //   }
+  // }

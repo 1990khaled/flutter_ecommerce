@@ -78,7 +78,14 @@ class _AddOfferpageState extends State<AddOfferpage> {
                     validator: (val) =>
                         val!.isEmpty ? 'من فضلك ادخل الكمية المتاحة' : null,
                     // onChanged: model.updatePassword,
-                    obscureText: true,
+                    keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value.isNotEmpty) {
+                            //TODO nawaqesModel.ammount = int.parse(value);
+                          }
+                        });
+                      },
                     decoration: const InputDecoration(
                       labelText: 'الكمية المتاحة',
                       hintText: 'ادخل الكمية المتاحة',

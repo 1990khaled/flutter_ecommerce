@@ -5,8 +5,9 @@ import 'package:flutter_ecommerce/models/shipping_address.dart';
 import 'package:flutter_ecommerce/models/user_data.dart';
 import 'package:flutter_ecommerce/services/firestore_services.dart';
 import 'package:flutter_ecommerce/utilities/api_path.dart';
+
 import '../models/nawqes.dart';
- 
+
 abstract class Database {
   Stream<List<Product>> salesProductsStream();
   Stream<List<Product>> newProductsStream();
@@ -15,7 +16,6 @@ abstract class Database {
   Stream<List<DeliveryMethod>> deliveryMethodsStream();
   Stream<List<ShippingAddress>> getShippingAddresses();
   Future<void> setUserData(UserData userData);
-   Future<void> setNawqesData(ShowingNawaqesModel nawaqesModel);
   Future<void> addToCart(AddToCartModel product);
   Future<void> saveAddress(ShippingAddress address);
 }
@@ -46,20 +46,11 @@ class FirestoreDatabase implements Database {
         builder: (data, documentId) => Product.fromMap(data!, documentId),
       );
 
-@override
- 
- Future<void> setUserData(UserData userData) async => await _service.setData(
+  @override
+  Future<void> setUserData(UserData userData) async => await _service.setData(
         path: ApiPath.user(userData.uid),
         data: userData.toMap(),
       );
-      
-
-   @override
-        Future<void> setNawqesData(ShowingNawaqesModel nawaqesModel) async  => await _service.setData(
-        path: ApiPath.nawaqes(),
-        data: nawaqesModel.toMap(),
-      );
-
 
   @override
   Future<void> addToCart(AddToCartModel product) async => _service.setData(
@@ -97,6 +88,4 @@ class FirestoreDatabase implements Database {
         ),
         data: address.toMap(),
       );
-      
-        
 }

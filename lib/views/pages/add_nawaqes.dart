@@ -1,6 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../controllers/database_controller.dart';
 import '../../models/nawqes.dart';
 import '../widgets/drop_down_menu.dart';
@@ -13,7 +13,7 @@ class AddNawaqespage extends StatefulWidget {
 
   final notificationId = UniqueKey().hashCode;
 
-   AddNawaqespage({super.key});
+  AddNawaqespage({super.key});
 
   @override
   State<AddNawaqespage> createState() => _AddNawaqespageState();
@@ -22,7 +22,6 @@ class AddNawaqespage extends StatefulWidget {
 Map<String, dynamic> data = {};
 
 class _AddNawaqespageState extends State<AddNawaqespage> {
- 
   final database = FirestoreDatabase('123');
   final _formKey = GlobalKey<FormState>();
   final _productNameController = TextEditingController();
@@ -34,8 +33,8 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
   final _custmNameFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
 
-  // CollectionReference nawaqesCollection =
-  //     FirebaseFirestore.instance.collection("addingNawaqesModle");
+  CollectionReference nawaqesCollection =
+      FirebaseFirestore.instance.collection("nawaqes");
   late String dropdownValue;
   final List<String> actors = [
     "خالد ياسين",
@@ -53,8 +52,13 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
     super.dispose();
   }
 
- ShowingNawaqesModel nawaqesModel = ShowingNawaqesModel(actorName: '', ammount: 0, description: '', id: AddNawaqespage().notificationId.toString() , title: '') ;
-  
+  ShowingNawaqesModel nawaqesModel = ShowingNawaqesModel(
+      actorName: '',
+      ammount: 0,
+      description: '',
+      id: AddNawaqespage().notificationId.toString(),
+      title: '');
+
   @override
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
@@ -112,7 +116,9 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
-                          nawaqesModel.ammount = value as int;
+                          if (value.isNotEmpty) {
+                            nawaqesModel.ammount = int.parse(value);
+                          }
                         });
                       },
                     ),
@@ -152,7 +158,9 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
-                          nawaqesModel.price = value as int;
+                          if (value.isNotEmpty) {
+                            nawaqesModel.price = int.parse(value);
+                          }
                         });
                       },
                     ),
@@ -189,15 +197,17 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
                       text: 'اضافة',
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
+                          await nawaqesCollection.add(nawaqesModel.toMap());
+                           if (context.mounted) Navigator.of(context).pop();
                           // _submit(model);
-                          await database.setNawqesData(
-                            nawaqesModel,
-                          );
-                          // nawaqesCollection
-                          //     .add( AddNawaqespage().newdata)
+                          // await database.setNawqesData(
+                          //   nawaqesModel,
+                          // );
                           // .then(
                           //   (value) => (value.id),
                           // );
+                          // nawaqesCollection
+                          //     .add( AddNawaqespage().newdata)
 
                           // setState(() {
                           //   _uploading = false;

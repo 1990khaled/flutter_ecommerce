@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class DeliveryMethod {
   final String id;
   final String name;

@@ -60,7 +60,7 @@ class FirestoreServices {
     });
   }
 
-  // setNawqesData({required String path, required Map<String, dynamic> data}) {
-    
-  // }
+//   Future <void> delete()async{
+// var collection = FirestoreServices.instance.collection("");
+//   }
 }
