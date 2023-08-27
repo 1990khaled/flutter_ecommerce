@@ -58,7 +58,7 @@ class ShopPage extends StatelessWidget {
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) =>  AddNawaqespage()),
+              MaterialPageRoute(builder: (context) => AddNawaqespage()),
             );
           }),
     );

@@ -2,6 +2,7 @@ class ApiPath {
   static String products() => 'products/';
   static String deletenawaqes(String uid) => 'nawaqes/';
   static String nawaqes() => 'nawaqes/';
+  static String actorsOffers() => 'actorsOffers/';
   static String deliveryMethods() => 'deliveryMethods/';
   // static String addingNawaqesModle(NawaqesModel nawaqesModel) => 'addingNawaqesModle/';
   static String user(String uid) => 'users/$uid';

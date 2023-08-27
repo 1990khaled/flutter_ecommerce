@@ -7,9 +7,9 @@ import '../widgets/drop_down_menu.dart';
 import '../widgets/main_button.dart';
 
 class AddNawaqespage extends StatefulWidget {
-  static Map<String, dynamic> get newdata {
-    return data;
-  }
+  // static Map<String, dynamic> get newdata {
+  //   return data;
+  // }
 
   final notificationId = UniqueKey().hashCode;
 
@@ -19,7 +19,7 @@ class AddNawaqespage extends StatefulWidget {
   State<AddNawaqespage> createState() => _AddNawaqespageState();
 }
 
-Map<String, dynamic> data = {};
+// Map<String, dynamic> data = {};
 
 class _AddNawaqespageState extends State<AddNawaqespage> {
   final database = FirestoreDatabase('123');
@@ -43,6 +43,7 @@ class _AddNawaqespageState extends State<AddNawaqespage> {
     "محمد علي",
     "احمد الروبي"
   ];
+  
   @override
   void dispose() {
     _productNameController.dispose();

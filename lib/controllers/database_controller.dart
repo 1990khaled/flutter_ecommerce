@@ -7,11 +7,13 @@ import 'package:flutter_ecommerce/services/firestore_services.dart';
 import 'package:flutter_ecommerce/utilities/api_path.dart';
 
 import '../models/nawqes.dart';
+import '../models/offer_model.dart';
 
 abstract class Database {
   Stream<List<Product>> salesProductsStream();
   Stream<List<Product>> newProductsStream();
   Stream<List<ShowingNawaqesModel>> nawqesProductsStream();
+Stream<List<OfferModel>> actorsOffersStream();
   Stream<List<AddToCartModel>> myProductsCart();
   Stream<List<DeliveryMethod>> deliveryMethodsStream();
   Stream<List<ShippingAddress>> getShippingAddresses();
@@ -33,6 +35,13 @@ class FirestoreDatabase implements Database {
       );
 
   @override
+  Stream<List<OfferModel>> actorsOffersStream() =>
+      _service.collectionsStream(
+        path: ApiPath.actorsOffers(),
+        builder: (data, documentId) =>
+            OfferModel.fromMap(data!, documentId),
+      );
+@override
   Stream<List<ShowingNawaqesModel>> nawqesProductsStream() =>
       _service.collectionsStream(
         path: ApiPath.nawaqes(),
