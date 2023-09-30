@@ -52,12 +52,11 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.nawaqesDetailsRoute:
       final args = settings.arguments as Map<String, dynamic>;
       final nawaqes = args['nawaqes'];
-      // final offerActor = args['offerActor'];
       final database = args['database'];
       return CupertinoPageRoute(
         builder: (_) => Provider<Database>.value(
           value: database,
-          child: NawaqestDetails(nawaqes: nawaqes ,),
+          child: NawaqestDetails(nawaqes: nawaqes),
         ),
         settings: settings,
       );
@@ -74,13 +73,13 @@ Route<dynamic> onGenerate(RouteSettings settings) {
 //-----------------------------------
     case AppRoutes.addOfferRout:
       return CupertinoPageRoute(
-        builder: (_) =>  AddOfferpage(),
+        builder: (_) => AddOfferpage(),
         settings: settings,
       );
 //-----------------------------------
     case AppRoutes.addNawaqesRout:
       return MaterialPageRoute(
-        builder: (_) =>  AddNawaqespage(),
+        builder: (_) => AddNawaqespage(),
         settings: settings,
       );
 //-----------------------------------
