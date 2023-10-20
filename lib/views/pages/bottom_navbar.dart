@@ -4,7 +4,7 @@ import 'package:flutter_ecommerce/views/pages/cart_page.dart';
 import 'package:flutter_ecommerce/views/pages/home_page.dart';
 import 'package:flutter_ecommerce/views/pages/profle_page.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-
+import 'favorite.dart';
 import 'shop.dart';
 
 class BottomNavbar extends StatefulWidget {
@@ -22,7 +22,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
       const HomePage(),
       const ShopPage(),
       const CartPage(),
-      Container(),
+      const Favorite(),
       const ProfilePage()
     ];
   }
