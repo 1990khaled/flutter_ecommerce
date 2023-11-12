@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class UserData {
   final String uid;
   final String email;

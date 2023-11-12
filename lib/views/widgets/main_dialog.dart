@@ -1,14 +1,14 @@
 
 import 'package:flutter/material.dart';
-
+// I have changed the context to nullable
 class MainDialog {
-  final BuildContext context;
+   BuildContext? context;
   final String title;
   final String content;
   final List<Map<String, void Function()?>>? actions;
 
   MainDialog({
-    required this.context,
+     this.context,
     required this.title,
     required this.content,
     this.actions,
@@ -16,15 +16,15 @@ class MainDialog {
 
   showAlertDialog() {
     showDialog(
-        context: context,
+        context: context!,
         builder: (_) => AlertDialog(
               title: Text(
                 title,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context!).textTheme.titleLarge,
               ),
               content: Text(
                 content,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context!).textTheme.titleMedium,
               ),
               actions: (actions != null)
                   ? actions!
@@ -35,7 +35,7 @@ class MainDialog {
                       .toList()
                   : [
                       TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Navigator.of(context!).pop(),
                         child: const Text('OK'),
                       ),
                     ],

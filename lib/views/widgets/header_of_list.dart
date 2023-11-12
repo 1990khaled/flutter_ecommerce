@@ -2,46 +2,41 @@ import 'package:flutter/material.dart';
 
 class HeaderOfList extends StatelessWidget {
   final String title;
-  final VoidCallback? onTap;
   final String description;
   const HeaderOfList({
     Key? key,
     required this.title,
     required this.description,
-    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-            ),
-            InkWell(
-              onTap: onTap,
-              child: Text(
-                'عرض الكل',
-                style: Theme.of(context).textTheme.titleMedium,
+    return Align(
+      alignment: Alignment.topRight,
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
               ),
-            ),
-          ],
-        ),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.grey,
-              ),
-        ),
-      ],
+              Text(
+            description,
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  color: const Color.fromARGB(255, 2, 2, 2),
+                ),
+          ),
+            ],
+          ),
+          
+        ],
+      ),
     );
   }
 }

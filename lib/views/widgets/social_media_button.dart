@@ -18,7 +18,7 @@ class SocialMediaButton extends StatelessWidget {
         width: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
-          color: Colors.white,
+          color: const Color.fromARGB(0, 27, 69, 113),
         ),
         child: Center(
           child: SvgPicture.asset(

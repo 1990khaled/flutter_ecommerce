@@ -14,16 +14,17 @@ class OrderSummaryComponent extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+         Text(
+          value,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         Text(
-          '$title:',
+          title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: Colors.grey,
               ),
         ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+       
       ],
     );
   }

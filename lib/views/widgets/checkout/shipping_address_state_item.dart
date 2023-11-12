@@ -55,7 +55,7 @@ class _ShippingAddressStateItemState extends State<ShippingAddressStateItem> {
                   ),
                   child: Text(
                     'Edit',
-                    style: Theme.of(context).textTheme.button!.copyWith(
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Colors.redAccent,
                         ),
                   ),
@@ -65,11 +65,11 @@ class _ShippingAddressStateItemState extends State<ShippingAddressStateItem> {
             const SizedBox(height: 8.0),
             Text(
               widget.shippingAddress.address,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
               '${widget.shippingAddress.city}, ${widget.shippingAddress.state}, ${widget.shippingAddress.country}',
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             CheckboxListTile(
               title: const Text("Default shipping address"),

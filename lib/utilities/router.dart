@@ -8,12 +8,12 @@ import 'package:flutter_ecommerce/views/pages/bottom_navbar.dart';
 import 'package:flutter_ecommerce/views/pages/checkout/add_shipping_address_page.dart';
 import 'package:flutter_ecommerce/views/pages/checkout/checkout_page.dart';
 import 'package:flutter_ecommerce/views/pages/checkout/shipping_addresses_page.dart';
+import 'package:flutter_ecommerce/views/pages/favorite.dart';
 import 'package:flutter_ecommerce/views/pages/landing_page.dart';
 import 'package:flutter_ecommerce/views/pages/product_details.dart';
 import 'package:provider/provider.dart';
-import '../views/pages/add_nawaqes.dart';
-import '../views/pages/add_offer.dart';
-import '../views/pages/nawaqes_details.dart';
+import '../views/pages/add_new_product.dart';
+import '../views/pages/new_product_details.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
   switch (settings.name) {
@@ -44,22 +44,36 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => Provider<Database>.value(
           value: database,
-          child: ProductDetails(product: product),
+          child: NewProductDetails(product: product),
         ),
         settings: settings,
       );
-    //-----------------------------------
-    case AppRoutes.nawaqesDetailsRoute:
+// ------------------------------------------------------------
+    case AppRoutes.favourite:
       final args = settings.arguments as Map<String, dynamic>;
-      final nawaqes = args['nawaqes'];
+      // final product = args['product'];
       final database = args['database'];
       return CupertinoPageRoute(
         builder: (_) => Provider<Database>.value(
           value: database,
-          child: NawaqestDetails(nawaqes: nawaqes),
+          child: const Favorite(),
         ),
         settings: settings,
       );
+// ------------------------------------------------------------
+    case AppRoutes.newproductDetailsRoute:
+      final args = settings.arguments as Map<String, dynamic>;
+      final product = args['product'];
+      final database = args['database'];
+      return CupertinoPageRoute(
+        builder: (_) => Provider<Database>.value(
+          value: database,
+          child: ProductDetails(newProduct: product),
+        ),
+        settings: settings,
+      );
+    //-----------------------------------
+   
     //-----------------------------------
     case AppRoutes.shippingAddressesRoute:
       final database = settings.arguments as Database;
@@ -72,14 +86,26 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       );
 //-----------------------------------
     case AppRoutes.addOfferRout:
+      final args = settings.arguments as Map<String, dynamic>;
+      final newproduct = args['newproduct'];
+      final database = args['database'];
       return CupertinoPageRoute(
-        builder: (_) => AddOfferpage(),
+        builder: (_) => Provider<Database>.value(
+          value: database,
+          child: AddOfferPage(product: newproduct),
+        ),
         settings: settings,
       );
 //-----------------------------------
-    case AppRoutes.addNawaqesRout:
+    case AppRoutes.addProduct:
+     final args = settings.arguments as Map<String, dynamic>;
+      final products = args['products'];
+      final database = args['database'];
       return MaterialPageRoute(
-        builder: (_) => AddNawaqespage(),
+         builder: (_) => Provider<Database>.value(
+          value: database,
+          child: AddOfferPage(product: products),
+        ),
         settings: settings,
       );
 //-----------------------------------

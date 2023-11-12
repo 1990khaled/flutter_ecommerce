@@ -1,10 +1,14 @@
+// 
+
+//----------------------------
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/auth_controller.dart';
-
+import 'package:flutter_ecommerce/utilities/assets.dart';
 import 'package:flutter_ecommerce/utilities/enums.dart';
 import 'package:flutter_ecommerce/views/widgets/main_button.dart';
 import 'package:flutter_ecommerce/views/widgets/main_dialog.dart';
-
+import 'package:flutter_ecommerce/views/widgets/social_media_button.dart';
 import 'package:provider/provider.dart';
 
 class AuthPage extends StatefulWidget {
@@ -62,7 +66,7 @@ class _AuthPageState extends State<AuthPage> {
                         model.authFormType == AuthFormType.login
                             ? 'Login'
                             : 'Register',
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.headline4,
                       ),
                       const SizedBox(height: 80.0),
                       TextFormField(
@@ -94,9 +98,12 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       const SizedBox(height: 16.0),
                       if (model.authFormType == AuthFormType.login)
-                        const Align(
+                        Align(
                           alignment: Alignment.topRight,
-                          child: Text('شركة الامين لتجارة اكسسوارات  الالومنيوم'),
+                          child: InkWell(
+                            child: const Text('Forgot your password?'),
+                            onTap: () {},
+                          ),
                         ),
                       const SizedBox(height: 24.0),
                       MainButton(
@@ -112,10 +119,16 @@ class _AuthPageState extends State<AuthPage> {
                       const SizedBox(height: 16.0),
                       Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          model.authFormType == AuthFormType.login
-                              ? 'Don\'t have an account'
-                              : 'Have an account? Login',
+                        child: InkWell(
+                          child: Text(
+                            model.authFormType == AuthFormType.login
+                                ? 'Don\'t have an account? Register'
+                                : 'Have an account? Login',
+                          ),
+                          onTap: () {
+                            _formKey.currentState!.reset();
+                            model.toggleFormType();
+                          },
                         ),
                       ),
                       SizedBox(height: size.height * 0.09),
@@ -125,10 +138,23 @@ class _AuthPageState extends State<AuthPage> {
                             model.authFormType == AuthFormType.login
                                 ? 'Or Login with'
                                 : 'Or Register with',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.subtitle1,
                           )),
                       const SizedBox(height: 16.0),
-                     
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SocialMediaButton(
+                            iconName: AppAssets.facebookIcon,
+                            onPress: () {},
+                          ),
+                          const SizedBox(width: 16.0),
+                          SocialMediaButton(
+                            iconName: AppAssets.googleIcon,
+                            onPress: () {},
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

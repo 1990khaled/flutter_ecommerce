@@ -4,8 +4,8 @@ import 'package:flutter_ecommerce/views/pages/cart_page.dart';
 import 'package:flutter_ecommerce/views/pages/home_page.dart';
 import 'package:flutter_ecommerce/views/pages/profle_page.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'accessories.dart';
 import 'favorite.dart';
-import 'shop.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({Key? key}) : super(key: key);
@@ -18,11 +18,12 @@ class _BottomNavbarState extends State<BottomNavbar> {
   final _bottomNavbarController = PersistentTabController();
 
   List<Widget> _buildScreens() {
+    
     return [
       const HomePage(),
-      const ShopPage(),
-      const CartPage(),
+      const AccessoriesScreen(),
       const Favorite(),
+      const CartPage(),
       const ProfilePage()
     ];
   }
@@ -31,32 +32,32 @@ class _BottomNavbarState extends State<BottomNavbar> {
     return [
       PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.home),
-        title: ("اكسسوار"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        title: ("الصفحة الرئيسية"),
+        activeColorPrimary:const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.bag),
-        title: ("الومنيوم"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        icon: const Icon(CupertinoIcons.folder_solid),
+        title: ("اكسسوارات"),
+        activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.shopping_cart),
-        title: ("الحقيبة"),
-        activeColorPrimary: CupertinoColors.activeBlue,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.favorite_border),
+       PersistentBottomNavBarItem(
+        icon: const Icon(Icons.favorite),
         title: ("المفضلة"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+       PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.cart),
+        title: ("الطلبية"),
+        activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(CupertinoIcons.profile_circled),
+        icon: const Icon(CupertinoIcons.person),
         title: ("الملف الشخصي"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
