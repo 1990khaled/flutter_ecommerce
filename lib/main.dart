@@ -1,11 +1,12 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/services/auth.dart';
 import 'package:flutter_ecommerce/utilities/router.dart';
-import 'package:flutter_ecommerce/utilities/routes.dart';
 import 'package:provider/provider.dart';
 import 'controllers/button_special_contrroler.dart';
 import 'utilities/custom_material.dart';
+import 'views/pages/landing_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MultiProvider(
         providers: [
           Provider<AuthBase>(
@@ -27,12 +29,22 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<SpecialController>(
             create: (_) => SpecialController(),
           ),
+          ChangeNotifierProvider<LocalQuant>(create: (_) => LocalQuant()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: themeMethod(context),
           onGenerateRoute: onGenerate,
-          initialRoute: AppRoutes.landingPageRoute,
+          // initialRoute:
+
+          //  AppRoutes.landingPageRoute,
+
+          home: AnimatedSplashScreen(
+              animationDuration: const Duration(milliseconds: 3),
+              splash: Image.asset(
+                "assets/images/al-yassin-group-SplashScreen1.png",
+              ),
+              nextScreen: const LandingPage()),
         ));
   }
 

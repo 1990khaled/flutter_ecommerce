@@ -1,21 +1,27 @@
 class AddToCartModel {
   final String id;
   final String productId;
+  String collectionPath;
   final String title;
   final double price;
-  final int quantity;
+  int quantity;
   final String imgUrl;
   final int qunInCarton;
+
+
 
   AddToCartModel({
     required this.id,
     required this.title,
     required this.price,
     required this.productId,
+    this.collectionPath = "",
     this.quantity = 1,
     required this.imgUrl,
     this.qunInCarton = 1,
   });
+
+int get numberOfParameters => 3;
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -27,7 +33,7 @@ class AddToCartModel {
     result.addAll({'quantity': quantity});
     result.addAll({'imgUrl': imgUrl});
     result.addAll({'qunInCarton': qunInCarton});
-    
+    result.addAll({'collectionPath': collectionPath});
     return result;
   }
 
@@ -35,6 +41,7 @@ class AddToCartModel {
     return AddToCartModel(
       id: documentId,
       title: map['title'] ?? '',
+      collectionPath: map['collectionPath'] ?? '',
       productId: map['productId'] ?? '',
       price: map['price'] ?? 0,
       quantity: map['quantity']?.toInt() ?? 0,

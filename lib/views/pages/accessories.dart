@@ -6,80 +6,200 @@ import 'package:provider/provider.dart';
 
 import '../widgets/list_item_accessori.dart';
 
-class AccessoriesScreen extends StatelessWidget {
+class AccessoriesScreen extends StatefulWidget {
+  
   const AccessoriesScreen({Key? key}) : super(key: key);
 
   @override
+  State<AccessoriesScreen> createState() => _AccessoriesScreenState();
+}
+
+class _AccessoriesScreenState extends State<AccessoriesScreen> {
+  TextEditingController searchController = TextEditingController();
+  // final _searchFocusNode = FocusNode();
+  late List<Product> searchedProduct;
+  String value = "";
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    TextEditingController searchController = TextEditingController();
     final size = MediaQuery.of(context).size;
     final database = Provider.of<Database>(context);
-
+    bool isSearching = false;
     return Scaffold(
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10, top: 10),
-        child: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  labelText: 'Search',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                onChanged: (value) {
-                  // Perform search operation
-                  // You can define your own logic here
-                  print(value);
-                },
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [ThemeData().primaryColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: TextField(
+          textAlign: TextAlign.end,
+          controller: searchController,
+          style: const TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
+          decoration: InputDecoration(
+            hintText: 'بحث...',
+            hintStyle: const TextStyle(color: Colors.white54),
+            border: InputBorder.none,
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.clear, color: Colors.white),
+              onPressed: () {
+                setState(() {
+                  searchController.clear();
+                  FocusScope.of(context).unfocus();
+                  value = "";
+                });
+              },
+            ),
+          ),
+          onChanged: (newValue) async {
+            setState(() {
+              if (newValue.isNotEmpty) {
+                isSearching = true;
+                value = newValue;
+              }
+            });
+          },
+        ),
+      ),
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) =>
+      //         AccessoriesSearchWidget(searchCaracter: value),
+      //   ),
+      // );
+
+      body: Stack(children: [
+        if (isSearching = true)
+          Visibility(
+            visible: isSearching,
+            child: SafeArea(
+                child: Padding(
+              padding: const EdgeInsets.only(
+                  bottom: 8, left: 10, right: 10, top: 35),
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.75,
+                        child: StreamBuilder<List<Product>>(
+                            stream: database.salesProductsStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.active) {
+                                final products = snapshot.data
+                                    ?.where((element) => element.title
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList();
+
+                                // snapshot.data?.where((element) {
+                                //   List titleWords =
+                                //       element.title.toLowerCase().split(' ');
+
+                                //   return titleWords.any((word) =>
+                                //       word.contains(widget.searchCaracter.toLowerCase()));
+                                // }).toList();
+
+                                // debugPrint("$snapshot ----------------------");
+                                if (products == null || products.isEmpty) {
+                                  return const Center(
+                                    child: Text('لا يوجد بيانات'),
+                                  );
+                                }
+
+                                return Builder(builder: (context) {
+                                  return GridView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: products.length,
+                                    itemBuilder: (_, int index) => Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: ListItemAccessories(
+                                        product: products[index],
+                                      ),
+                                    ),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                    ),
+                                  );
+                                });
+                              }
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
+                      ),
+                    ]),
+              ),
+            )),
+          ),
+        if (isSearching = false)
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  bottom: 8, left: 10, right: 10, top: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const HeaderOfList(
+                        title: '',
+                        description: 'اسعار الاكسسوار',
+                      ),
+                      const SizedBox(height: 4.0),
+                      SizedBox(
+                        height: size.height * 0.75,
+                        child: StreamBuilder<List<Product>>(
+                            stream: database.salesProductsStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.active) {
+                                final products = snapshot.data;
+                                // debugPrint("$snapshot ----------------------");
+                                if (products == null || products.isEmpty) {
+                                  return const Center(
+                                    child: Text('لا يوجد بيانات'),
+                                  );
+                                }
+                                return GridView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: products.length,
+                                  itemBuilder: (_, int index) => Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: ListItemAccessories(
+                                      product: products[index],
+                                    ),
+                                  ),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                  ),
+                                );
+                              }
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
+                      ),
+                    ]),
               ),
             ),
-            const HeaderOfList(
-              title: '',
-              description: 'اسعار الاكسسوار',
-            ),
-            const SizedBox(height: 4.0),
-            SizedBox(
-              height: size.height * 0.75,
-              child: StreamBuilder<List<Product>>(
-                  stream: database.salesProductsStream(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      final products = snapshot.data;
-                      // debugPrint("$snapshot ----------------------");
-                      if (products == null || products.isEmpty) {
-                        return const Center(
-                          child: Text('لا يوجد بيانات'),
-                        );
-                      }
-                      return GridView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: products.length,
-                        itemBuilder: (_, int index) => Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: ListItemAccessories(
-                            product: products[index],
-                          ),
-                        ),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
-            ),
-          ]),
-        ),
-      )),
+          ),
+        // if (isSearching = false)
+      ]),
     );
   }
 }

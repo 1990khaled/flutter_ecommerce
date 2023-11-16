@@ -30,14 +30,30 @@ class _ProductDetailsState extends State<ProductDetails> {
         price: widget.newProduct.price,
         productId: widget.newProduct.id,
         imgUrl: widget.newProduct.imgUrl,
-        qunInCarton : widget.newProduct.qunInCarton,
-        
+        qunInCarton: widget.newProduct.qunInCarton,
       );
-      await database.addToCart(addToCartProduct);
+
+      // Check if the item is already in the cart
+      final exists = await database.isItemInCart(widget.newProduct.title).first;
+      if (exists) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const AlertDialog(
+              content: Text(
+                "المنتج موجود بالفعل",
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+        );
+      } else {
+        database.addToCart(addToCartProduct);
+      }
     } catch (e) {
       return MainDialog(
         title: 'Error',
-        content: 'Couldn\'t adding to the cart, please try again!',
+        content: 'Couldn\'t add to the cart, please try again!',
       ).showAlertDialog();
     }
   }
@@ -49,11 +65,21 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_right_alt_sharp),
+            color: Colors.white,
+          )
+        ],
+        centerTitle: true,
         title: Text(
           widget.newProduct.title,
-          maxLines: 3,
           softWrap: true,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: const Color.fromARGB(255, 255, 255, 255),
+              ),
         ),
       ),
       body: SingleChildScrollView(
@@ -118,5 +144,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
 
 // ------------------------------------------------------
+// new product changed with product details : its mean for new product details we use product details we el aks
 
 

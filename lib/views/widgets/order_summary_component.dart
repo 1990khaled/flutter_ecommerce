@@ -12,7 +12,7 @@ class OrderSummaryComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
          Text(
           value,
@@ -21,7 +21,7 @@ class OrderSummaryComponent extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.grey,
+                color: const Color.fromARGB(255, 34, 34, 34),
               ),
         ),
        

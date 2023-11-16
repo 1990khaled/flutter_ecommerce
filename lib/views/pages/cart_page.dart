@@ -5,29 +5,37 @@ import 'package:flutter_ecommerce/views/widgets/cart_list_item.dart';
 import 'package:flutter_ecommerce/views/widgets/main_button.dart';
 import 'package:flutter_ecommerce/views/widgets/order_summary_component.dart';
 import 'package:provider/provider.dart';
+import '../../controllers/button_special_contrroler.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
-
 
   @override
   State<CartPage> createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
-  double totalAmount = 0;
+  var specialController = Provider.of<SpecialController>;
+  double totalAmount = 1;
+  final database = Provider.of<Database>;
 
-  @override
+   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     final myProducts = await Provider.of<Database>(context, listen: false)
         .myProductsCart()
         .first;
+
+    double newTotalAmount = 0;
+
     for (var element in myProducts) {
-      setState(() {
-        totalAmount += element.price;
-      });
+      newTotalAmount +=
+          element.price * element.qunInCarton * element.quantity;
     }
+
+    setState(() {
+      totalAmount = newTotalAmount;
+    });
   }
 
   @override
@@ -38,30 +46,36 @@ class _CartPageState extends State<CartPage> {
       child: StreamBuilder<List<AddToCartModel>>(
           stream: database.myProductsCart(),
           builder: (context, snapshot) {
-            //TODO deleeting snapshothas error
             if (snapshot.hasError) {
               Center(
                 child: Text(
-                  '${snapshot.data}',
+                  'لايوجد بيانات',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               );
             }
             if (snapshot.connectionState == ConnectionState.active) {
               final cartItems = snapshot.data;
+                 double newTotalAmount = 0;
+                 if (cartItems != null && cartItems.isNotEmpty) {
+              for (var element in cartItems) {
+                newTotalAmount +=
+                    element.price * element.qunInCarton * element.quantity;
+              }
+            }
 
+            totalAmount = newTotalAmount;
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 16.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                    
                       const SizedBox(height: 16.0),
                       Text(
                         'الطلبيات',
-                        textAlign : TextAlign.right,
+                        textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -74,7 +88,7 @@ class _CartPageState extends State<CartPage> {
                       if (cartItems == null || cartItems.isEmpty)
                         Center(
                           child: Text(
-                            '${snapshot.error}',
+                            'لايوجد بيانات',
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ),
@@ -87,26 +101,24 @@ class _CartPageState extends State<CartPage> {
                             final cartItem = cartItems[i];
                             return CartListItem(
                               cartItem: cartItem,
+                              // localQuantity: ,
                             );
                           },
                         ),
                       const SizedBox(height: 24.0),
                       OrderSummaryComponent(
-                        value: "7.0" ,
-                        title: ' :اجمالي الحساب',
-                        
+                        value: "$totalAmount",
+                        title: 'اجمالي الحساب',
                       ),
                       const SizedBox(height: 32.0),
-                      MainButton(
-                        text: 'ارسال الطلبية',
-                        onTap: () {}
-                        // => Navigator.of(context, rootNavigator: true)
-                        //     .pushNamed(
-                        //   AppRoutes.checkoutPageRoute,
-                        //   arguments: database,
-                        // ),
-                        // hasCircularBorder: true,
-                      ),
+                      MainButton(text: 'ارسال الطلبية', onTap: () {}
+                          // => Navigator.of(context, rootNavigator: true)
+                          //     .pushNamed(
+                          //   AppRoutes.checkoutPageRoute,
+                          //   arguments: database,
+                          // ),
+                          // hasCircularBorder: true,
+                          ),
                       const SizedBox(height: 32.0),
                     ],
                   ),

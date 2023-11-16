@@ -4,6 +4,9 @@ import 'package:flutter_ecommerce/views/pages/cart_page.dart';
 import 'package:flutter_ecommerce/views/pages/home_page.dart';
 import 'package:flutter_ecommerce/views/pages/profle_page.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:provider/provider.dart';
+
+import '../../controllers/button_special_contrroler.dart';
 import 'accessories.dart';
 import 'favorite.dart';
 
@@ -18,7 +21,6 @@ class _BottomNavbarState extends State<BottomNavbar> {
   final _bottomNavbarController = PersistentTabController();
 
   List<Widget> _buildScreens() {
-    
     return [
       const HomePage(),
       const AccessoriesScreen(),
@@ -33,7 +35,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
       PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.home),
         title: ("الصفحة الرئيسية"),
-        activeColorPrimary:const Color.fromARGB(255, 4, 31, 1),
+        activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
@@ -42,13 +44,13 @@ class _BottomNavbarState extends State<BottomNavbar> {
         activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-       PersistentBottomNavBarItem(
+      PersistentBottomNavBarItem(
         icon: const Icon(Icons.favorite),
         title: ("المفضلة"),
         activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-       PersistentBottomNavBarItem(
+      PersistentBottomNavBarItem(
         icon: const Icon(CupertinoIcons.cart),
         title: ("الطلبية"),
         activeColorPrimary: const Color.fromARGB(255, 4, 31, 1),

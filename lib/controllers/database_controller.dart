@@ -16,7 +16,9 @@ abstract class Database {
   Stream<List<Product>> salesProductsStream();
   Stream<List<NewProduct>> newProductsStream();
   Stream<List<FavouriteModel>> myFavouriteStream();
+  Stream<bool> isItemInFavourite(String productId);
   Stream<List<AddToCartModel>> myProductsCart();
+  Stream<bool> isItemInCart(String productId);
   Stream<List<DeliveryMethod>> deliveryMethodsStream();
   Stream<List<ShippingAddress>> getShippingAddresses();
   Future<void> setUserData(UserData userData);
@@ -24,8 +26,12 @@ abstract class Database {
   Future<void> addNewProduct(NewProduct product);
   Future<void> addNews(NewsModel product);
   Future<void> addToCart(AddToCartModel product);
+  // Future<void> updateData(Map<String, dynamic> data, String path );
+  Future<void> removeFromCart(AddToCartModel product);
   Future<void> addToFavourite(FavouriteModel product);
+  Future<void> removeFromFavourite(FavouriteModel product);
   Future<void> saveAddress(ShippingAddress address);
+  Future<void> updateQuantityInCart(AddToCartModel product, int newQuantity);
 }
 
 class FirestoreDatabase implements Database {
@@ -97,18 +103,9 @@ class FirestoreDatabase implements Database {
       );
 
   @override
-  Future<void> addToCart(AddToCartModel product) async => _service.setData(
-        path: ApiPath.addToCart(uid, product.id),
-        data: product.toMap(),
-      );
-
-  //-------------------------------------------------
-
-  @override
-  Stream<List<AddToCartModel>> myProductsCart() => _service.collectionsStream(
-        path: ApiPath.myProductsCart(uid),
-        builder: (data, documentId) =>
-            AddToCartModel.fromMap(data!, documentId),
+  Future<void> removeFromFavourite(FavouriteModel product) async =>
+      _service.deleteData(
+        path: ApiPath.addToFavourite(uid, product.id),
       );
 
   @override
@@ -118,6 +115,41 @@ class FirestoreDatabase implements Database {
         builder: (data, documentId) =>
             FavouriteModel.fromMap(data!, documentId),
       );
+
+  @override
+  Stream<bool> isItemInFavourite(String productId) {
+    return myFavouriteStream().map(
+      (cartItems) => cartItems.any((item) => item.title == productId),
+    );
+  }
+
+//-----------------------------------------------------------------------
+  @override
+  Future<void> addToCart(AddToCartModel product) async => _service.setData(
+        path: ApiPath.addToCart(uid, product.id),
+        data: product.toMap(),
+      );
+  @override
+  Future<void> removeFromCart(AddToCartModel product) async =>
+      _service.deleteData(
+        path: ApiPath.addToCart(uid, product.id),
+      );
+
+  @override
+  Stream<List<AddToCartModel>> myProductsCart() => _service.collectionsStream(
+        path: ApiPath.myProductsCart(uid),
+        builder: (data, documentId) =>
+            AddToCartModel.fromMap(data!, documentId),
+      );
+
+  @override
+  Stream<bool> isItemInCart(String productId) {
+    return myProductsCart().map(
+      (cartItems) => cartItems.any((item) => item.title == productId),
+    );
+  }
+
+  //---------------------------------------------------------------
 
   @override
   Stream<List<DeliveryMethod>> deliveryMethodsStream() =>
@@ -133,4 +165,26 @@ class FirestoreDatabase implements Database {
         builder: (data, documentId) =>
             ShippingAddress.fromMap(data!, documentId),
       );
+//-------------------------------------------------------------------------------------
+  @override
+  Future<void> updateQuantityInCart(
+      AddToCartModel product, int newQuantity) async {
+    // Extract the existing data from Firebase
+    final existingData = await FirestoreServices.instance
+        .getData(path: ApiPath.addToCart(uid, product.id));
+
+    if (existingData != null) {
+      // Update only the quantity field
+      existingData['quantity'] = newQuantity;
+
+      // Update the data with the modified quantity
+      await FirestoreServices.instance.setData(
+        path: ApiPath.addToCart(uid, product.id),
+        data: existingData,
+      );
+    } else {
+      // Handle the case where the document doesn't exist
+      print('Document does not exist!');
+    }
+  }
 }

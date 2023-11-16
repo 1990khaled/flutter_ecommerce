@@ -17,6 +17,28 @@ class FirestoreServices {
     await reference.set(data);
   }
 
+//-----------------------------------------------------------------------
+  // Future<void> updateData( {
+  //   required String path,
+  //   required Map<String, dynamic> data,
+  // }) async {
+  //   final reference = _fireStore.doc(path).collection(path);
+  //   debugPrint('Request Data: $data');
+  //   await reference.add(data);
+  // }
+  Future<Map<String, dynamic>?> getData({required String path}) async {
+  final reference = _fireStore.doc(path);
+  final snapshot = await reference.get();
+
+  if (snapshot.exists) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return data;
+  }
+
+  return null;
+}
+
+//-----------------------------------------------------------------------
   Future<void> deleteData({required String path}) async {
     final reference = _fireStore.doc(path);
     debugPrint('Path: $path');

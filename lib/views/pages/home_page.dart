@@ -115,22 +115,18 @@ class HomePage extends StatelessWidget {
                     child: StreamBuilder<List<NewProduct>>(
                         stream: database.newProductsStream(),
                         builder: (context, snapshot) {
-                          //         if (snapshot.hasError) {
-                          //   return  Center(
-                          //     child: Text('${snapshot.error}'),
-                          //   );
-                          // }
-                          // if (snapshot.connectionState == ConnectionState.done) {
-                          //   return const Center(
-                          //     child: Text('ان شاء الله خير'),
-                          //   );
-                          // }
+                                  if (snapshot.hasError) {
+                            return  const Center(
+                               child: Text('لا يوجد عروض هذه الفترة'),
+                            );
+                          }
+                         
                           if (snapshot.connectionState ==
                               ConnectionState.active) {
                             final newProduct = snapshot.data;
                             if (newProduct == null || newProduct.isEmpty) {
                               return const Center(
-                                child: Text('لا يوجد بيانات'),
+                                child: Text('لا يوجد عروض هذه الفترة'),
                               );
                             }
                             return ListView.builder(

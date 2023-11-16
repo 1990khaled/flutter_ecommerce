@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/database_controller.dart';
 import '../../models/add_to_cart_model.dart';
+import '../../models/favourite_modle.dart';
 import '../../models/product.dart';
 import '../../utilities/constants.dart';
 import '../widgets/main_button.dart';
@@ -20,7 +22,6 @@ class NewProductDetails extends StatefulWidget {
 
 class _NewProductDetailsState extends State<NewProductDetails> {
   bool isFavorite = false;
-  late String dropdownValue;
 
   Future<void> _addToCart(Database database) async {
     try {
@@ -32,15 +33,92 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         imgUrl: widget.product.imgUrl,
         qunInCarton: widget.product.qunInCarton,
       );
-      await database.addToCart(addToCartProduct);
+
+      // Check if the item is already in the cart
+      final exists = await database.isItemInCart(widget.product.title).first;
+      if (exists) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const
+         AlertDialog(
+          content: Text(
+            "المنتج موجود بالفعل",
+            textAlign: TextAlign.center,
+          ),
+        );
+          },
+        );
+      } else {
+        database.addToCart(addToCartProduct);
+      }
     } catch (e) {
       return MainDialog(
-        // context: context,
         title: 'Error',
-        content: 'Couldn\'t adding to the cart, please try again!',
+        content: 'Couldn\'t add to the cart, please try again!',
       ).showAlertDialog();
     }
   }
+
+//--------------------------------------------------------
+  Future<void> _addToFavourite(Database database) async {
+    try {
+      final addToFavouriteProduct = FavouriteModel(
+        id: documentIdFromLocalData(),
+        title: widget.product.title,
+        price: widget.product.price,
+        productId: widget.product.id,
+        imgUrl: widget.product.imgUrl,
+        qunInCarton: widget.product.qunInCarton,
+      );
+
+      // Check if the item is already in the favorite
+      final exists =
+          await database.isItemInFavourite(widget.product.title).first;
+      if (exists) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const
+         AlertDialog(
+          content: Text(
+            "المنتج موجود بالفعل",
+            textAlign: TextAlign.center,
+          ),
+        );
+          },
+        );
+      } else {
+        database.addToFavourite(addToFavouriteProduct);
+      }
+    } catch (e) {
+      return MainDialog(
+        title: 'Error',
+        content: 'Couldn\'t add to the favorite, please try again!',
+      ).showAlertDialog();
+    }
+  }
+
+  //---------------------------------------------------------
+//  Future<void> _addToFavourite(Database database) async {
+//     try {
+//       final addToFavouriteProduct = FavouriteModel(
+//         id: documentIdFromLocalData(),
+//         title: widget.product.title,
+//         price: widget.product.price,
+//         productId: widget.product.id,
+//         imgUrl: widget.product.imgUrl,
+//         qunInCarton: widget.product.qunInCarton,
+//       );
+//       await database.addToFavourite(addToFavouriteProduct);
+//     } catch (e) {
+//       return MainDialog(
+//         // context: context,
+//         title: 'Error',
+//         content: 'Couldn\'t adding to the Favourite, please try again!',
+//       ).showAlertDialog();
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +127,20 @@ class _NewProductDetailsState extends State<NewProductDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.product.title,
-          maxLines: 3,
-          softWrap: true,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_right_alt_sharp),
+            color: Colors.white,
+          )
+        ],
+        centerTitle: true,
+        title: Text(widget.product.title,
+            softWrap: true,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                )),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -81,28 +167,24 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                       softWrap: true,
                       textAlign: TextAlign.right,
                       widget.product.title,
-                      style:
-                          Theme.of(context).textTheme.titleMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
                     leading: Text(
                       'ج ${widget.product.price}السعر',
-                      style:
-                          Theme.of(context).textTheme.titleMedium!.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.red,
-                              ),
-                             
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.red,
+                          ),
                     ),
-                     subtitle:Text(
-                        '${widget.product.script}  ${widget.product.qunInCarton}',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              fontWeight: FontWeight.w600,
-                              
-                            ),
-                            textAlign: TextAlign.right,
-                      ) ,
+                    subtitle: Text(
+                      '${widget.product.script}  ${widget.product.qunInCarton}',
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                      textAlign: TextAlign.right,
+                    ),
                   ),
                   const SizedBox(height: 24.0),
                   Row(
@@ -113,6 +195,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                           setState(() {
                             isFavorite = !isFavorite;
                           });
+                          _addToFavourite(database);
                         },
                         child: SizedBox(
                           height: 60,
