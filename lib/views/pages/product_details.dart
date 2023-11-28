@@ -31,6 +31,10 @@ class _ProductDetailsState extends State<ProductDetails> {
         productId: widget.newProduct.id,
         imgUrl: widget.newProduct.imgUrl,
         qunInCarton: widget.newProduct.qunInCarton,
+        script: widget.newProduct.script,
+        maximum: widget.newProduct.maximum,
+        quantity: widget.newProduct.minimum,
+        minimum: widget.newProduct.minimum,
       );
 
       // Check if the item is already in the cart
@@ -112,14 +116,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                     ),
                     leading: Text(
-                      'ج ${widget.newProduct.price - widget.newProduct.price * widget.newProduct.discountValue}السعر',
+                      'السعر :${widget.newProduct.price} ج',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.red,
                           ),
                     ),
                     subtitle: Text(
-                      '${widget.newProduct.script}  ${widget.newProduct.qunInCarton}',
+                      '${widget.newProduct.script} : ${widget.newProduct.qunInCarton}',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

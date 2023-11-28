@@ -17,6 +17,6 @@ class AppRoutes {
   static const String shippingAddressesRoute = '/checkout/shipping-addresses';
   static const String addShippingAddressRoute =
       '/checkout/add-shipping-address';
-  static const String addOfferRout = '/addOffer';
+  static const String addNewProductPage = '/addNewProductPage';
   
 }

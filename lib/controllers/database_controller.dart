@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/add_to_cart_model.dart';
 import 'package:flutter_ecommerce/models/delivery_method.dart';
 import 'package:flutter_ecommerce/models/product.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_ecommerce/models/shipping_address.dart';
 import 'package:flutter_ecommerce/models/user_data.dart';
 import 'package:flutter_ecommerce/services/firestore_services.dart';
 import 'package:flutter_ecommerce/utilities/api_path.dart';
+
 import '../models/favourite_modle.dart';
 import '../models/new_product.dart';
 import '../models/news_modle.dart';
@@ -32,6 +34,7 @@ abstract class Database {
   Future<void> removeFromFavourite(FavouriteModel product);
   Future<void> saveAddress(ShippingAddress address);
   Future<void> updateQuantityInCart(AddToCartModel product, int newQuantity);
+  Future<void> updateNews(NewsModel newsModel);
 }
 
 class FirestoreDatabase implements Database {
@@ -185,6 +188,50 @@ class FirestoreDatabase implements Database {
     } else {
       // Handle the case where the document doesn't exist
       print('Document does not exist!');
+    }
+  }
+
+  //--------------------------------------------
+
+  @override
+  Future<void> updateNews(NewsModel newsModel) async {
+    try {
+      // Fetch the existing data from Firestore
+      final existingData = await FirestoreServices.instance
+          .getData(path: "news/${newsModel.id}");
+
+      if (existingData != null) {
+        // Update logic: Replace existing fields with provided data if available
+        final Map<String, dynamic> updatedData = {
+          if (newsModel.title != null) 'title': newsModel.title,
+          if (newsModel.imgUrl != null) 'imgUrl': newsModel.imgUrl,
+          if (newsModel.url != null) 'url': newsModel.url,
+          // Add other fields you want to update similarly
+        };
+
+        // Merge updatedData with existingData to keep the old data intact
+        final mergedData = {...existingData, ...updatedData};
+
+        // Check if any update was made, then update the Firestore document
+        if (mergedData.isNotEmpty) {
+          await FirestoreServices.instance.setData(
+            path: "news/${newsModel.id}",
+            data: mergedData,
+          );
+          // Successful update, log a message
+          debugPrint("News updated successfully!");
+        } else {
+          // No updates provided in newsModel
+          debugPrint("No updates provided for ID: ${newsModel.id}");
+        }
+      } else {
+        // Document doesn't exist
+        debugPrint("Document does not exist for ID: ${newsModel.id}");
+      }
+    } catch (e) {
+      // Firestore operation error
+      debugPrint("Firestore Error: $e");
+      throw e; // Propagate the error further if needed
     }
   }
 }

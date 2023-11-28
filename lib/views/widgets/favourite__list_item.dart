@@ -90,7 +90,7 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
                 ),
                 subtitle: Text(
                   textAlign: TextAlign.center,
-                  "${widget.favouriteModel.qunInCarton} :الكمية داخل العبوة",
+                  "${widget.favouriteModel.qunInCarton} : ${widget.favouriteModel.script} ",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(),
                 ),
                 trailing: IconButton(

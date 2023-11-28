@@ -19,27 +19,33 @@ class _ListItemNewsState extends State<ListItemNews> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Stack(children: [
-      Column(
-        children: [
-          InkWell(
-            onTap: _launchURL,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: Placeholder(
-                child: Image.network(
-                  widget.newsModel.imgUrl,
-                  width: size.height * 0.20,
-                  height: size.height * 0.18,
-                  fit: BoxFit.cover,
-                ),
+    return Column(
+      children: [
+        InkWell(
+          onTap: _launchURL,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: Placeholder(
+              child: Image.network(
+                widget.newsModel.imgUrl,
+                width: size.height * 0.20,
+                height: size.height * 0.18,
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          Text(widget.newsModel.title, maxLines: 2,),
-        ],
-      ),
-    ]);
+        ),
+        SizedBox(
+            height: size.height * 0.04,
+            width: size.height * 0.20,
+            child: Text(
+              widget.newsModel.title,
+              maxLines: 1,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            )),
+      ],
+    );
   }
 
   Future _launchURL() async {

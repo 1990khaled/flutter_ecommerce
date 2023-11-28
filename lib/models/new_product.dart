@@ -4,17 +4,20 @@ class NewProduct {
   final double price;
   final String imgUrl;
   final double discountValue;
-   final String script;
+  final String script;
   final int qunInCarton;
-
+  final int maximum;
+  final int minimum;
   NewProduct({
     required this.id,
     required this.title,
     required this.price,
     required this.imgUrl,
     this.discountValue = 0.1,
-     required this.qunInCarton,
-    this.script = "الكمية داخل العبوة "
+    required this.qunInCarton,
+    this.script = "الكمية داخل العبوة ",
+    this.maximum = 20,
+    this.minimum = 5,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +27,10 @@ class NewProduct {
       'price': price,
       'imgUrl': imgUrl,
       'discountValue': discountValue,
-      'qunInCarton' : qunInCarton,
+      'qunInCarton': qunInCarton,
+      'script': script,
+      'maximum': maximum,
+      'minimum': minimum,
     };
   }
 
@@ -35,7 +41,10 @@ class NewProduct {
       price: map['price'] as double,
       imgUrl: map['imgUrl'] as String,
       discountValue: map['discountValue'] as double,
-      qunInCarton : map['qunInCarton'] as int,
+      qunInCarton: map['qunInCarton'] as int,
+      script: map['script'] as String,
+      maximum: map['maximum'] as int,
+      minimum: map['minimum'] as int,
     );
   }
 }

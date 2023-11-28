@@ -4,9 +4,6 @@ import 'package:flutter_ecommerce/views/pages/cart_page.dart';
 import 'package:flutter_ecommerce/views/pages/home_page.dart';
 import 'package:flutter_ecommerce/views/pages/profle_page.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
-import 'package:provider/provider.dart';
-
-import '../../controllers/button_special_contrroler.dart';
 import 'accessories.dart';
 import 'favorite.dart';
 

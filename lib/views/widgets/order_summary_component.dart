@@ -14,7 +14,7 @@ class OrderSummaryComponent extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-         Text(
+        Text(
           value,
           style: Theme.of(context).textTheme.titleLarge,
         ),
@@ -22,9 +22,9 @@ class OrderSummaryComponent extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: const Color.fromARGB(255, 34, 34, 34),
+                fontWeight: FontWeight.w600,
               ),
         ),
-       
       ],
     );
   }

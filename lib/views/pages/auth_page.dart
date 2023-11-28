@@ -1,7 +1,3 @@
-// 
-
-//----------------------------
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/auth_controller.dart';
 import 'package:flutter_ecommerce/utilities/assets.dart';
@@ -66,7 +62,7 @@ class _AuthPageState extends State<AuthPage> {
                         model.authFormType == AuthFormType.login
                             ? 'Login'
                             : 'Register',
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(height: 80.0),
                       TextFormField(
@@ -166,3 +162,4 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 }
+

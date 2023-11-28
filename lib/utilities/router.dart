@@ -12,7 +12,7 @@ import 'package:flutter_ecommerce/views/pages/favorite.dart';
 import 'package:flutter_ecommerce/views/pages/landing_page.dart';
 import 'package:flutter_ecommerce/views/pages/product_details.dart';
 import 'package:provider/provider.dart';
-import '../views/pages/add_new_product.dart';
+import '../views/pages/editing/add_new_product.dart';
 import '../views/pages/new_product_details.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
@@ -85,29 +85,27 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
 //-----------------------------------
-    case AppRoutes.addOfferRout:
+    case AppRoutes.addNewProductPage:
       final args = settings.arguments as Map<String, dynamic>;
-      final newproduct = args['newproduct'];
       final database = args['database'];
       return CupertinoPageRoute(
         builder: (_) => Provider<Database>.value(
           value: database,
-          child: AddOfferPage(product: newproduct),
+          child: const AddNewProductPage(),
         ),
         settings: settings,
       );
 //-----------------------------------
-    case AppRoutes.addProduct:
-     final args = settings.arguments as Map<String, dynamic>;
-      final products = args['products'];
-      final database = args['database'];
-      return MaterialPageRoute(
-         builder: (_) => Provider<Database>.value(
-          value: database,
-          child: AddOfferPage(product: products),
-        ),
-        settings: settings,
-      );
+    // case AppRoutes.addProduct:
+    //  final args = settings.arguments as Map<String, dynamic>;
+    //   final database = args['database'];
+    //   return MaterialPageRoute(
+    //      builder: (_) => Provider<Database>.value(
+    //       value: database,
+    //       child: const AddNewProductPage(),
+    //     ),
+    //     settings: settings,
+    //   );
 //-----------------------------------
     case AppRoutes.addShippingAddressRoute:
       final args = settings.arguments as AddShippingAddressArgs;

@@ -5,7 +5,6 @@ import 'package:flutter_ecommerce/views/widgets/cart_list_item.dart';
 import 'package:flutter_ecommerce/views/widgets/main_button.dart';
 import 'package:flutter_ecommerce/views/widgets/order_summary_component.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/button_special_contrroler.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -15,11 +14,11 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  var specialController = Provider.of<SpecialController>;
+  // var specialController = Provider.of<SpecialController>;
   double totalAmount = 1;
   final database = Provider.of<Database>;
 
-   @override
+  @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     final myProducts = await Provider.of<Database>(context, listen: false)
@@ -27,10 +26,8 @@ class _CartPageState extends State<CartPage> {
         .first;
 
     double newTotalAmount = 0;
-
     for (var element in myProducts) {
-      newTotalAmount +=
-          element.price * element.qunInCarton * element.quantity;
+      newTotalAmount += element.price * element.qunInCarton * element.quantity;
     }
 
     setState(() {
@@ -56,15 +53,15 @@ class _CartPageState extends State<CartPage> {
             }
             if (snapshot.connectionState == ConnectionState.active) {
               final cartItems = snapshot.data;
-                 double newTotalAmount = 0;
-                 if (cartItems != null && cartItems.isNotEmpty) {
-              for (var element in cartItems) {
-                newTotalAmount +=
-                    element.price * element.qunInCarton * element.quantity;
+              double newTotalAmount = 0;
+              if (cartItems != null && cartItems.isNotEmpty) {
+                for (var element in cartItems) {
+                  newTotalAmount +=
+                      element.price * element.qunInCarton * element.quantity;
+                }
               }
-            }
 
-            totalAmount = newTotalAmount;
+              totalAmount = newTotalAmount;
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -108,7 +105,7 @@ class _CartPageState extends State<CartPage> {
                       const SizedBox(height: 24.0),
                       OrderSummaryComponent(
                         value: "$totalAmount",
-                        title: 'اجمالي الحساب',
+                        title: ': اجمالي الحساب',
                       ),
                       const SizedBox(height: 32.0),
                       MainButton(text: 'ارسال الطلبية', onTap: () {}

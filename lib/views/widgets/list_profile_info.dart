@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../../models/user_modle.dart';
 
 class ListProfileInfo extends StatefulWidget {
   final UserModle userModle;
 
-  const ListProfileInfo(
-    {
+  const ListProfileInfo({
     Key? key,
     required this.userModle,
   }) : super(key: key);
@@ -21,6 +21,7 @@ class _ListProfileInfoState extends State<ListProfileInfo> {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(100)),
@@ -50,24 +51,20 @@ class _ListProfileInfoState extends State<ListProfileInfo> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Phone: ${widget.userModle.phoneNum}',
+            'الموبايل: ${widget.userModle.phoneNum}',
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 12),
           Text(
-            'Company: ${widget.userModle.companyName}',
+            'اسم الشركة: ${widget.userModle.companyName}',
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 12),
           Text(
-            'Address: ${widget.userModle.adress}',
+            'العنوان: ${widget.userModle.adress}',
             style: const TextStyle(fontSize: 16),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(icon: const Icon(Icons.edit), onPressed: () {}),
-          ),
-          
+         
         ],
       ),
     );

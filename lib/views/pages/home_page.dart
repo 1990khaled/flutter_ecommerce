@@ -4,6 +4,7 @@ import 'package:flutter_ecommerce/models/news_modle.dart';
 import 'package:flutter_ecommerce/views/widgets/header_of_list.dart';
 import 'package:flutter_ecommerce/views/widgets/list_item_home.dart';
 import 'package:provider/provider.dart';
+
 import '../../models/new_product.dart';
 import '../widgets/list_item_news.dart';
 
@@ -66,7 +67,7 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 7.0),
                     SizedBox(
-                      height: size.height * 0.23,
+                      height: size.height * 0.24,
                       child: StreamBuilder<List<NewsModel>>(
                           stream: database.newsStream(),
                           builder: (context, snapshot) {
@@ -115,12 +116,12 @@ class HomePage extends StatelessWidget {
                     child: StreamBuilder<List<NewProduct>>(
                         stream: database.newProductsStream(),
                         builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                            return  const Center(
-                               child: Text('لا يوجد عروض هذه الفترة'),
+                          if (snapshot.hasError) {
+                            return const Center(
+                              child: Text('لا يوجد عروض هذه الفترة'),
                             );
                           }
-                         
+
                           if (snapshot.connectionState ==
                               ConnectionState.active) {
                             final newProduct = snapshot.data;

@@ -32,6 +32,10 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         productId: widget.product.id,
         imgUrl: widget.product.imgUrl,
         qunInCarton: widget.product.qunInCarton,
+        maximum: widget.product.maximum,
+        quantity: widget.product.minimum,
+        script: widget.product.script,
+        minimum: widget.product.minimum
       );
 
       // Check if the item is already in the cart
@@ -40,13 +44,12 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const
-         AlertDialog(
-          content: Text(
-            "المنتج موجود بالفعل",
-            textAlign: TextAlign.center,
-          ),
-        );
+            return const AlertDialog(
+              content: Text(
+                "المنتج موجود بالفعل",
+                textAlign: TextAlign.center,
+              ),
+            );
           },
         );
       } else {
@@ -70,6 +73,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         productId: widget.product.id,
         imgUrl: widget.product.imgUrl,
         qunInCarton: widget.product.qunInCarton,
+        script: widget.product.script,
+        maximum: widget.product.maximum,
       );
 
       // Check if the item is already in the favorite
@@ -79,13 +84,12 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const
-         AlertDialog(
-          content: Text(
-            "المنتج موجود بالفعل",
-            textAlign: TextAlign.center,
-          ),
-        );
+            return const AlertDialog(
+              content: Text(
+                "المنتج موجود بالفعل",
+                textAlign: TextAlign.center,
+              ),
+            );
           },
         );
       } else {
@@ -172,14 +176,14 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                           ),
                     ),
                     leading: Text(
-                      'ج ${widget.product.price}السعر',
+                      'السعر: ${widget.product.price} ج',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                             color: Colors.red,
                           ),
                     ),
                     subtitle: Text(
-                      '${widget.product.script}  ${widget.product.qunInCarton}',
+                      '${widget.product.script} : ${widget.product.qunInCarton}',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

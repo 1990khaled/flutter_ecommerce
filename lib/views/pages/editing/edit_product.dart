@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/database_controller.dart';
+import '../../../controllers/database_controller.dart';
 
-class EditNews extends StatelessWidget {
-  const EditNews({super.key});
+class EditProduct extends StatelessWidget {
+  const EditProduct({super.key});
   // final Product product;
 
   @override

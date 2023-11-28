@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import '../../controllers/database_controller.dart';
 import '../../models/user_modle.dart';
 import '../widgets/list_profile_info.dart';
-import '../widgets/my_special_button.dart';
+import 'editing/my_special_button.dart';
+import 'user_orders.dart';
 
 // import '../widgets/my_special_button.dart';
 
@@ -56,8 +57,8 @@ class ProfilePage extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.active) {
                     final userInfo = snapshot.data;
                     if (userInfo == null || userInfo.isEmpty) {
-                      return Center(
-                        child: Text('${snapshot.error}'),
+                      return const Center(
+                        child: Text("من فضلك ادخل بياناتك"),
                       );
                     }
                     return ListView.builder(
@@ -76,25 +77,58 @@ class ProfilePage extends StatelessWidget {
                   );
                 }),
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    width: 2,
+          Positioned(
+            bottom: size.height * 0.32,
+            right: size.height * 0.17,
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const UserOrderPage()));
+                  },
+                  child: const Text(
+                    "طلبياتي",
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-          //TODO make the add button showing only to my two users
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const MySpecialButtonWidget()));
-                    },
-                    icon: const Icon(Icons.add))),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        //TODO user information addation
+                      }),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: size.height * 0.20,
+            right: size.height * 0.17,
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      width: 2,
+                    ),
+                  ),
+
+                  //TODO make the add button showing only to my two users
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                const MySpecialButtonWidget()));
+                      },
+                      icon: const Icon(Icons.add))),
+            ),
           ),
           Consumer<AuthController>(
             builder: (_, model, __) => Column(

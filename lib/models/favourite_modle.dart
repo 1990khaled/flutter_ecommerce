@@ -5,6 +5,9 @@ class FavouriteModel {
   final double price;
   final String imgUrl;
   final int qunInCarton;
+  final String script;
+  final int maximum;
+  final int minimum;
 
   FavouriteModel({
     required this.id,
@@ -13,6 +16,9 @@ class FavouriteModel {
     required this.productId,
     required this.imgUrl,
     this.qunInCarton = 1,
+    this.script = "الكمية داخل العبوة ",
+    this.maximum = 5,
+    this.minimum = 1,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +30,15 @@ class FavouriteModel {
     result.addAll({'price': price});
     result.addAll({'imgUrl': imgUrl});
     result.addAll({'qunInCarton': qunInCarton});
-    
+    result.addAll({
+      'script': script,
+    });
+    result.addAll({
+      'maximum': maximum,
+    });
+result.addAll({
+      'minimum': minimum,
+    });
     return result;
   }
 
@@ -36,6 +50,9 @@ class FavouriteModel {
       price: map['price'] ?? 0,
       imgUrl: map['imgUrl'] ?? '',
       qunInCarton: map['qunInCarton']?.toInt() ?? 0,
+      script: map['script'] ?? '',
+      maximum: map['maximum'] ?? 0,
+      minimum: map['minimum'] ?? 0,
     );
   }
 }

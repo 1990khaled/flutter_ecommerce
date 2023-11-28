@@ -1,4 +1,3 @@
-
 class Product {
   final String id;
   final String title;
@@ -7,17 +6,20 @@ class Product {
   final String category;
   final String script;
   final int qunInCarton;
-  Product({
-    required this.id,
-    required this.title,
-    required this.price,
-    required this.imgUrl,
-    this.category = 'Other',
-    required this.qunInCarton,
-    this.script = "الكمية داخل العبوة "
+  final int maximum;
+  final int minimum;
 
-    
-  });
+  Product(
+      {required this.id,
+      required this.title,
+      required this.price,
+      required this.imgUrl,
+      this.category = 'Other',
+      required this.qunInCarton,
+      this.script = "الكمية داخل العبوة ",
+      this.maximum = 10,
+      this.minimum = 1,
+      });
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,7 +28,10 @@ class Product {
       'price': price,
       'imgUrl': imgUrl,
       'category': category,
-      'qunInCarton' : qunInCarton,
+      'qunInCarton': qunInCarton,
+      'script': script,
+      'maximum': maximum,
+      'minimum': minimum,
     };
   }
 
@@ -37,7 +42,10 @@ class Product {
       price: map['price'] as double,
       imgUrl: map['imgUrl'] as String,
       category: map['category'] as String,
-      qunInCarton : map['qunInCarton'] as int,
+      qunInCarton: map['qunInCarton'] as int,
+      script: map['script'] as String,
+      maximum: map['maximum'] as int,
+      minimum: map['minimum'] as int,
     );
   }
 }

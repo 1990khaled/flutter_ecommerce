@@ -62,7 +62,7 @@ class ListItemHome extends StatelessWidget {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${newProduct.price} ج',
+                        text: '${newProduct.discountValue} ج',
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
@@ -70,7 +70,7 @@ class ListItemHome extends StatelessWidget {
                       ),
                       TextSpan(
                         text:
-                            '  ${newProduct.price - newProduct.price * newProduct.discountValue}',
+                            '  ${newProduct.price} ',
                         style:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
                                   color: Colors.red,
