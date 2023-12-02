@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/auth_controller.dart';
 import 'package:flutter_ecommerce/views/widgets/main_button.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/database_controller.dart';
 import '../../models/user_modle.dart';
 import '../widgets/list_profile_info.dart';
 import 'editing/my_special_button.dart';
 import 'user_orders.dart';
-
-// import '../widgets/my_special_button.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -78,28 +77,34 @@ class ProfilePage extends StatelessWidget {
                 }),
           ),
           Positioned(
-            bottom: size.height * 0.32,
-            right: size.height * 0.17,
+            bottom: size.height * 0.34,
+            right: size.height * 0.14,
             child: Column(
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const UserOrderPage()));
-                  },
-                  child: const Text(
-                    "طلبياتي",
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const UserOrderPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "طلبياتي",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
-                        //TODO user information addation
-                      }),
+                        //TODO: Add logic for editing user information
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

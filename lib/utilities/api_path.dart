@@ -2,6 +2,7 @@ class ApiPath {
   static String products() => 'products/';
   static String newProduct() => 'newproduct/';
   static String newsStream() => 'news/';
+  static String ordersCollection(String orderId) => 'orders/$orderId';
   // -------------------------------------------------------------
   static String profileInfoStream() => 'profileInfoStream/';
     static String profileInfo(String uid,) =>
@@ -15,9 +16,11 @@ class ApiPath {
 
   static String addToCart(String uid, String addToCartId ) =>
       'users/$uid/cart/$addToCartId/';
-  
-// static String editQuantity(String uid, String addToCartId, String collectionPath ) =>
-//       'users/$uid/cart/$addToCartId/$collectionPath';
+
+     static String addOrderToUserData(String uid , String addToOrderId) =>
+      'users/$uid/userOrders/$addToOrderId';
+  static String userOrderData(String uid) =>
+      'users/$uid/userOrders/';
 
   static String addToFavourite(String uid, String addToFavourite) =>
       'users/$uid/Favourite/$addToFavourite';

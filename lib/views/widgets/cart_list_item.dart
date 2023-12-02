@@ -7,16 +7,7 @@ import '../../controllers/database_controller.dart';
 class CartListItem extends StatefulWidget {
   final AddToCartModel cartItem;
   late double totalammount;
-  // double calculateTotalAmount(List<AddToCartModel>? cartItems) {
-  //   double total = 0;
-  //   if (cartItems != null) {
-  //     for (var element in cartItems) {
-  //       total += element.price * element.qunInCarton * element.quantity;
-  //     }
-  //   }
-  //   return total;
-  // }
-
+ 
   CartListItem({
     Key? key,
     required this.cartItem,
@@ -27,11 +18,6 @@ class CartListItem extends StatefulWidget {
 }
 
 class _CartListItemState extends State<CartListItem> {
-  // void updateLocalQuantity(int newQuantity) {
-  //   setState(() {
-  //     widget.localQuantity = newQuantity;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +29,7 @@ class _CartListItemState extends State<CartListItem> {
     return SizedBox(
       height: size.height * 0.27,
       child: Card(
-        color: Colors.white60,
+        // color: Colors.white60,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

@@ -10,6 +10,7 @@ import 'package:flutter_ecommerce/utilities/api_path.dart';
 import '../models/favourite_modle.dart';
 import '../models/new_product.dart';
 import '../models/news_modle.dart';
+import '../models/orders_model.dart';
 import '../models/user_modle.dart';
 
 abstract class Database {
@@ -20,6 +21,7 @@ abstract class Database {
   Stream<List<FavouriteModel>> myFavouriteStream();
   Stream<bool> isItemInFavourite(String productId);
   Stream<List<AddToCartModel>> myProductsCart();
+  Stream<List<OrdersModel>> myOrdersStream();
   Stream<bool> isItemInCart(String productId);
   Stream<List<DeliveryMethod>> deliveryMethodsStream();
   Stream<List<ShippingAddress>> getShippingAddresses();
@@ -28,13 +30,18 @@ abstract class Database {
   Future<void> addNewProduct(NewProduct product);
   Future<void> addNews(NewsModel product);
   Future<void> addToCart(AddToCartModel product);
-  // Future<void> updateData(Map<String, dynamic> data, String path );
   Future<void> removeFromCart(AddToCartModel product);
   Future<void> addToFavourite(FavouriteModel product);
   Future<void> removeFromFavourite(FavouriteModel product);
   Future<void> saveAddress(ShippingAddress address);
   Future<void> updateQuantityInCart(AddToCartModel product, int newQuantity);
   Future<void> updateNews(NewsModel newsModel);
+  Future<void> updateNewProduct(NewProduct newProduct);
+  Future<void> updateProduct(Product newProduct);
+  Future<void> addToMyOrders(OrdersModel product , String orderId);
+  
+  // Stream<List<OrdersModel>> userOrdersStream();
+  // Future<void> addToUserOrders(OrdersModel product);
 }
 
 class FirestoreDatabase implements Database {
@@ -152,6 +159,41 @@ class FirestoreDatabase implements Database {
     );
   }
 
+  @override
+  Stream<List<OrdersModel>> myOrdersStream() => _service.collectionsStream(
+        path: "orders",
+        builder: (data, documentId) => OrdersModel.fromMap(data!, documentId),
+      );
+
+  @override
+  Future<void> addToMyOrders(OrdersModel product , String orderId) async {
+    try {
+      final data = product.toMap();
+      debugPrint('Adding order: $data');
+
+      await _service.setData(
+        path: ApiPath.ordersCollection(orderId),
+        data: data,
+      );
+
+      debugPrint('Order added successfully!');
+    } catch (e) {
+      debugPrint('Error adding order: $e');
+      // Handle error accordingly
+    }
+  }
+
+  // @override
+  // Stream<List<OrdersModel>> userOrdersStream() => _service.collectionsStream(
+  //       path: ApiPath.userOrderData(uid),
+  //       builder: (data, documentId) => OrdersModel.fromMap(data!, documentId),
+  //     );
+
+  // @override
+  // Future<void> addToUserOrders(OrdersModel product) async => _service.setData(
+  //       path: ApiPath.addOrderToUserData(uid, product.id),
+  //       data: product.toMap(),
+  //     );
   //---------------------------------------------------------------
 
   @override
@@ -227,6 +269,105 @@ class FirestoreDatabase implements Database {
       } else {
         // Document doesn't exist
         debugPrint("Document does not exist for ID: ${newsModel.id}");
+      }
+    } catch (e) {
+      // Firestore operation error
+      debugPrint("Firestore Error: $e");
+      throw e; // Propagate the error further if needed
+    }
+  }
+
+//--------------------------------------------
+  @override
+  Future<void> updateNewProduct(NewProduct newProduct) async {
+    try {
+      // Fetch the existing data from Firestore
+      final existingData = await FirestoreServices.instance
+          .getData(path: "newproduct/${newProduct.id}");
+
+      if (existingData != null) {
+        // Update logic: Replace existing fields with provided data if available
+        final Map<String, dynamic> updatedData = {
+          if (newProduct.title != null) 'title': newProduct.title,
+          if (newProduct.imgUrl != null) 'imgUrl': newProduct.imgUrl,
+          if (newProduct.discountValue != null)
+            'discountValue': newProduct.discountValue,
+          if (newProduct.maximum != null) 'maximum': newProduct.maximum,
+          if (newProduct.price != null) 'price': newProduct.price,
+          if (newProduct.script != null) 'script': newProduct.script,
+          if (newProduct.minimum != null) 'minimum': newProduct.minimum,
+          if (newProduct.qunInCarton != null)
+            'qunInCarton': newProduct.qunInCarton,
+          // Add other fields you want to update similarly
+        };
+
+        // Merge updatedData with existingData to keep the old data intact
+        final mergedData = {...existingData, ...updatedData};
+
+        // Check if any update was made, then update the Firestore document
+        if (mergedData.isNotEmpty) {
+          await FirestoreServices.instance.setData(
+            path: "newproduct/${newProduct.id}",
+            data: mergedData,
+          );
+          // Successful update, log a message
+          debugPrint("News updated successfully!");
+        } else {
+          // No updates provided in newsModel
+          debugPrint("No updates provided for ID: ${newProduct.id}");
+        }
+      } else {
+        // Document doesn't exist
+        debugPrint("Document does not exist for ID: ${newProduct.id}");
+      }
+    } catch (e) {
+      // Firestore operation error
+      debugPrint("Firestore Error: $e");
+      throw e; // Propagate the error further if needed
+    }
+  }
+
+  //---------------------------------------------------
+  @override
+  Future<void> updateProduct(Product newProduct) async {
+    try {
+      // Fetch the existing data from Firestore
+      final existingData = await FirestoreServices.instance
+          .getData(path: "products/${newProduct.id}");
+
+      if (existingData != null) {
+        // Update logic: Replace existing fields with provided data if available
+        final Map<String, dynamic> updatedData = {
+          if (newProduct.title != null) 'title': newProduct.title,
+          if (newProduct.imgUrl != null) 'imgUrl': newProduct.imgUrl,
+          if (newProduct.category != null) 'category': newProduct.category,
+          if (newProduct.maximum != null) 'maximum': newProduct.maximum,
+          if (newProduct.price != null) 'price': newProduct.price,
+          if (newProduct.script != null) 'script': newProduct.script,
+          if (newProduct.minimum != null) 'minimum': newProduct.minimum,
+          if (newProduct.qunInCarton != null)
+            'qunInCarton': newProduct.qunInCarton,
+          // Add other fields you want to update similarly
+        };
+
+        // Merge updatedData with existingData to keep the old data intact
+        final mergedData = {...existingData, ...updatedData};
+
+        // Check if any update was made, then update the Firestore document
+        if (mergedData.isNotEmpty) {
+          await FirestoreServices.instance.setData(
+            path: "products/${newProduct.id}",
+            data: mergedData,
+          );
+          // Successful update, log a message
+          debugPrint("News updated successfully!");
+        } else {
+          // No updates provided in newsModel
+          debugPrint("No updates provided for ID: ${newProduct.id}");
+        }
+      } else {
+        // Document doesn't exist
+        debugPrint("Document does not exist for ID: ${newProduct.id}");
       }
     } catch (e) {
       // Firestore operation error

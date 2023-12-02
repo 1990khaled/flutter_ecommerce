@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/database_controller.dart';
 import 'package:flutter_ecommerce/models/product.dart';
-import 'package:flutter_ecommerce/views/widgets/header_of_list.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/list_item_accessori.dart';
@@ -29,9 +28,7 @@ class _AccessoriesScreenState extends State<AccessoriesScreen> {
     bool isSearching = false;
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-         
-        ),
+        flexibleSpace: Container(),
         title: TextField(
           textAlign: TextAlign.end,
           controller: searchController,
@@ -120,59 +117,6 @@ class _AccessoriesScreenState extends State<AccessoriesScreen> {
               ),
             )),
           ),
-        if (isSearching = false)
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 8, left: 10, right: 10, top: 10),
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const HeaderOfList(
-                        title: '',
-                        description: 'اسعار الاكسسوار',
-                      ),
-                      const SizedBox(height: 4.0),
-                      SizedBox(
-                        height: size.height * 0.75,
-                        child: StreamBuilder<List<Product>>(
-                            stream: database.salesProductsStream(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.active) {
-                                final products = snapshot.data;
-                                // debugPrint("$snapshot ----------------------");
-                                if (products == null || products.isEmpty) {
-                                  return const Center(
-                                    child: Text('لا يوجد بيانات'),
-                                  );
-                                }
-                                return GridView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: products.length,
-                                  itemBuilder: (_, int index) => Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: ListItemAccessories(
-                                      product: products[index],
-                                    ),
-                                  ),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                  ),
-                                );
-                              }
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }),
-                      ),
-                    ]),
-              ),
-            ),
-          ),
-        // if (isSearching = false)
       ]),
     );
   }

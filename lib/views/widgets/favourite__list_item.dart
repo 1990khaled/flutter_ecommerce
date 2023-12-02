@@ -40,7 +40,7 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
       child: SizedBox(
         height: size.height * 0.23,
         child: Card(
-          color: Colors.white70,
+          color: Colors.white54,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
