@@ -8,6 +8,7 @@ abstract class AuthBase {
   Future<User?> loginWithEmailAndPassword(String email, String password);
 
   Future<User?> signUpWithEmailAndPassword(String email, String password);
+  
 
   Future<void> logout();
 }

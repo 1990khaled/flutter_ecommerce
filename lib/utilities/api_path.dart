@@ -5,22 +5,23 @@ class ApiPath {
   static String ordersCollection(String orderId) => 'orders/$orderId';
   // -------------------------------------------------------------
   static String profileInfoStream() => 'profileInfoStream/';
-    static String profileInfo(String uid,) =>
-      'users/$uid/profileInfo/';
+  static String profileInfo(
+    String uid,
+  ) =>
+      'users/$uid';
   // -------------------------------------------------------------
-  
+
   // ------------------------------------------------------------
   static String deliveryMethods() => 'deliveryMethods/';
   // ------------------------------------------------------------
   static String user(String uid) => 'users/$uid';
 
-  static String addToCart(String uid, String addToCartId ) =>
+  static String addToCart(String uid, String addToCartId) =>
       'users/$uid/cart/$addToCartId/';
 
-     static String addOrderToUserData(String uid , String addToOrderId) =>
+  static String addOrderToUserData(String uid, String addToOrderId) =>
       'users/$uid/userOrders/$addToOrderId';
-  static String userOrderData(String uid) =>
-      'users/$uid/userOrders/';
+  static String userOrderData(String uid) => 'users/$uid/userOrders/';
 
   static String addToFavourite(String uid, String addToFavourite) =>
       'users/$uid/Favourite/$addToFavourite';
@@ -29,15 +30,21 @@ class ApiPath {
       'users/$uid/shippingAddresses/';
   static String newAddress(String uid, String addressId) =>
       'users/$uid/shippingAddresses/$addressId';
-    static String myProductsCart(String uid) => 'users/$uid/cart/';
-    static String myFavourite(String uid) => 'users/$uid/Favourite/';
+  static String myProductsCart(String uid) => 'users/$uid/cart/';
+  static String myFavourite(String uid) => 'users/$uid/Favourite/';
+  static String userInformation(
+    String uid,
+  ) =>
+      'users/$uid/profileInfo/';
+
+  static String getUserInformation(
+    String uid,
+  ) =>
+      'users/$uid/profileInfo/npyZVhIDq34g3vTR7Prq';
 }
 
 
-/*  
-
-
-
+/*
 Future updateField(String documentId, String field, dynamic value) async {
   try {
     await FirebaseFirestore.instance.collection('your_collection_name')

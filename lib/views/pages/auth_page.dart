@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/auth_controller.dart';
-import 'package:flutter_ecommerce/utilities/assets.dart';
+
 import 'package:flutter_ecommerce/utilities/enums.dart';
 import 'package:flutter_ecommerce/views/widgets/main_button.dart';
 import 'package:flutter_ecommerce/views/widgets/main_dialog.dart';
-import 'package:flutter_ecommerce/views/widgets/social_media_button.dart';
+
 import 'package:provider/provider.dart';
 
 class AuthPage extends StatefulWidget {
@@ -136,21 +136,7 @@ class _AuthPageState extends State<AuthPage> {
                                 : 'Or Register with',
                             style: Theme.of(context).textTheme.subtitle1,
                           )),
-                      const SizedBox(height: 16.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SocialMediaButton(
-                            iconName: AppAssets.facebookIcon,
-                            onPress: () {},
-                          ),
-                          const SizedBox(width: 16.0),
-                          SocialMediaButton(
-                            iconName: AppAssets.googleIcon,
-                            onPress: () {},
-                          ),
-                        ],
-                      ),
+                     
                     ],
                   ),
                 ),

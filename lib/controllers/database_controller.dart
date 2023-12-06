@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/add_to_cart_model.dart';
-import 'package:flutter_ecommerce/models/delivery_method.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/models/shipping_address.dart';
 import 'package:flutter_ecommerce/models/user_data.dart';
@@ -11,11 +10,10 @@ import '../models/favourite_modle.dart';
 import '../models/new_product.dart';
 import '../models/news_modle.dart';
 import '../models/orders_model.dart';
-import '../models/user_modle.dart';
 
 abstract class Database {
   Stream<List<NewsModel>> newsStream();
-  Stream<List<UserModle>> profileInfoStream();
+  Future<void> setUserInfo(UserModel userModel);
   Stream<List<Product>> salesProductsStream();
   Stream<List<NewProduct>> newProductsStream();
   Stream<List<FavouriteModel>> myFavouriteStream();
@@ -23,8 +21,6 @@ abstract class Database {
   Stream<List<AddToCartModel>> myProductsCart();
   Stream<List<OrdersModel>> myOrdersStream();
   Stream<bool> isItemInCart(String productId);
-  Stream<List<DeliveryMethod>> deliveryMethodsStream();
-  Stream<List<ShippingAddress>> getShippingAddresses();
   Future<void> setUserData(UserData userData);
   Future<void> addProduct(Product product);
   Future<void> addNewProduct(NewProduct product);
@@ -33,15 +29,20 @@ abstract class Database {
   Future<void> removeFromCart(AddToCartModel product);
   Future<void> addToFavourite(FavouriteModel product);
   Future<void> removeFromFavourite(FavouriteModel product);
+  Future<void> deleteOrder(OrdersModel product);
   Future<void> saveAddress(ShippingAddress address);
   Future<void> updateQuantityInCart(AddToCartModel product, int newQuantity);
   Future<void> updateNews(NewsModel newsModel);
   Future<void> updateNewProduct(NewProduct newProduct);
   Future<void> updateProduct(Product newProduct);
-  Future<void> addToMyOrders(OrdersModel product , String orderId);
-  
+  Future<void> addToMyOrders(OrdersModel product, String orderId);
+  Future<void> updateUserInformation(UserModel userModel);
+  Future<UserModel?> getUserInformation();
+  // Future<String> getUserId(String uid);
   // Stream<List<OrdersModel>> userOrdersStream();
   // Future<void> addToUserOrders(OrdersModel product);
+  // Stream<List<DeliveryMethod>> deliveryMethodsStream();
+  // Stream<List<ShippingAddress>> getShippingAddresses();
 }
 
 class FirestoreDatabase implements Database {
@@ -68,11 +69,10 @@ class FirestoreDatabase implements Database {
       );
 
   @override
-  Stream<List<UserModle>> profileInfoStream() => _service.collectionsStream(
-        path: ApiPath.profileInfo(uid),
-        builder: (data, documentId) => UserModle.fromMap(data!, documentId),
+  Future<void> setUserInfo(UserModel userModel) async => await _service.setData(
+        path: ApiPath.getUserInformation(uid),
+        data: userModel.toMap(),
       );
-
   //-------------------------------------------------------------
   @override
   Future<void> saveAddress(ShippingAddress address) => _service.setData(
@@ -104,6 +104,11 @@ class FirestoreDatabase implements Database {
   Future<void> addNews(NewsModel product) async => _service.setData(
         path: ApiPath.newsStream(),
         data: product.toMap(),
+      );
+
+  @override
+  Future<void> deleteOrder(OrdersModel product) async => _service.deleteData(
+        path: ApiPath.ordersCollection(product.id),
       );
 
   @override
@@ -166,7 +171,7 @@ class FirestoreDatabase implements Database {
       );
 
   @override
-  Future<void> addToMyOrders(OrdersModel product , String orderId) async {
+  Future<void> addToMyOrders(OrdersModel product, String orderId) async {
     try {
       final data = product.toMap();
       debugPrint('Adding order: $data');
@@ -196,20 +201,20 @@ class FirestoreDatabase implements Database {
   //     );
   //---------------------------------------------------------------
 
-  @override
-  Stream<List<DeliveryMethod>> deliveryMethodsStream() =>
-      _service.collectionsStream(
-          path: ApiPath.deliveryMethods(),
-          builder: (data, documentId) =>
-              DeliveryMethod.fromMap(data!, documentId));
+  // @override
+  // Stream<List<DeliveryMethod>> deliveryMethodsStream() =>
+  //     _service.collectionsStream(
+  //         path: ApiPath.deliveryMethods(),
+  //         builder: (data, documentId) =>
+  //             DeliveryMethod.fromMap(data!, documentId));
 
-  @override
-  Stream<List<ShippingAddress>> getShippingAddresses() =>
-      _service.collectionsStream(
-        path: ApiPath.userShippingAddress(uid),
-        builder: (data, documentId) =>
-            ShippingAddress.fromMap(data!, documentId),
-      );
+  // @override
+  // Stream<List<ShippingAddress>> getShippingAddresses() =>
+  //     _service.collectionsStream(
+  //       path: ApiPath.userShippingAddress(uid),
+  //       builder: (data, documentId) =>
+  //           ShippingAddress.fromMap(data!, documentId),
+  // );
 //-------------------------------------------------------------------------------------
   @override
   Future<void> updateQuantityInCart(
@@ -232,6 +237,94 @@ class FirestoreDatabase implements Database {
       print('Document does not exist!');
     }
   }
+
+// --------------------------------------------
+  // @override
+  // Future<String> getUserId(String uid) async {
+  //   uid = FirebaseAuth.instance.currentUser!.uid;
+  //   return uid;
+  // }
+//----------------------------------------------------
+  @override
+  Future<UserModel?> getUserInformation() async {
+    try {
+      final collectionRef = FirestoreServices.instance.collectionReference(
+        path: "users/$uid/profileInfo",
+      );
+
+      final collections = await collectionRef.get();
+
+      if (collections.docs.isNotEmpty) {
+        // Collection exists, proceed with retrieving user data
+        final userData = await FirestoreServices.instance.getData(
+          path: ApiPath.getUserInformation(uid),
+        );
+
+        // If userData is null or empty, handle accordingly
+        if (userData != null && userData.isNotEmpty) {
+          return UserModel.fromMap(userData, ApiPath.getUserInformation(uid));
+        } else {
+          // Handle if userData is null or empty
+          return null;
+        }
+      } else {
+        // Collection doesn't exist, create the collection or handle accordingly
+        // ... (Logic to create the collection or handle the scenario)
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Firestore Error: $e");
+      rethrow; // Propagate the error further if needed
+    }
+  }
+
+//----------------------------------------------------------------------
+  @override
+  Future<void> updateUserInformation(UserModel userModel) async {
+    try {
+      // Fetch the existing data from Firestore
+      final existingData = await FirestoreServices.instance.getData(
+          path: ApiPath.userInformation(
+        uid,
+      ));
+
+      if (existingData != null) {
+        // Update logic: Replace existing fields with provided data if available
+        final Map<String, dynamic> updatedData = {
+          if (userModel.address != null) 'address': userModel.address,
+          if (userModel.name != null) 'name': userModel.name,
+          if (userModel.companyName != null)
+            'companyName': userModel.companyName,
+
+          // Add other fields you want to update similarly
+        };
+
+        // Merge updatedData with existingData to keep the old data intact
+        final mergedData = {...existingData, ...updatedData};
+
+        // Check if any update was made, then update the Firestore document
+        if (mergedData.isNotEmpty) {
+          await FirestoreServices.instance.setData(
+            path: ApiPath.userInformation(uid),
+            data: mergedData,
+          );
+          // Successful update, log a message
+          debugPrint("News updated successfully!");
+        } else {
+          // No updates provided in newsModel
+          debugPrint("No updates provided for ID: ${userModel.id}");
+        }
+      } else {
+        // Document doesn't exist
+        debugPrint("Document does not exist for ID: ${userModel.id}");
+      }
+    } catch (e) {
+      // Firestore operation error
+      debugPrint("Firestore Error: $e");
+      throw e; // Propagate the error further if needed
+    }
+  }
+//--------------------------------------------------
 
   //--------------------------------------------
 

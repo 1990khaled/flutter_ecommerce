@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/orders_model.dart';
+import 'package:provider/provider.dart';
 
+import '../../controllers/database_controller.dart';
 import '../pages/company/order_details.dart';
 
 class OrdersInfoListTime extends StatelessWidget {
@@ -9,6 +11,7 @@ class OrdersInfoListTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -18,7 +21,7 @@ class OrdersInfoListTime extends StatelessWidget {
               subtitle: Text(ordersModel.date),
               leading: IconButton(
                   onPressed: () {
-                    deleting();
+                    database.deleteOrder(ordersModel);
                   },
                   icon: const Icon(Icons.delete)),
               onTap: () {
@@ -35,6 +38,8 @@ class OrdersInfoListTime extends StatelessWidget {
       ),
     );
   }
-
-  void deleting() {}
 }
+//   void deleting() {
+//     database.
+//   }
+// }

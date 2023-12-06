@@ -23,7 +23,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
       const AccessoriesScreen(),
       const Favorite(),
       const CartPage(),
-      const ProfilePage()
+       ProfilePage()
     ];
   }
 

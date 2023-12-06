@@ -6,14 +6,13 @@ import 'package:flutter_ecommerce/utilities/router.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/auth_controller.dart';
-
 import 'utilities/custom_material.dart';
 import 'views/pages/landing_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
   runApp(const MyApp());
 }
 
@@ -28,11 +27,10 @@ class MyApp extends StatelessWidget {
           Provider<AuthBase>(
             create: (_) => Auth(),
           ),
-        
-
           ListenableProvider<AuthController>(
-            create: (context) =>
-                AuthController(auth: Provider.of<AuthBase>(context ,listen: false),),
+            create: (context) => AuthController(
+              auth: Provider.of<AuthBase>(context, listen: false),
+            ),
           ),
         ],
         child: MaterialApp(
@@ -57,9 +55,7 @@ class MyApp extends StatelessWidget {
     CustomMaterialColor customMaterialColor =
         CustomMaterialColor(0, 27, 69, 118);
     return ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 236, 236, 236),
-        // primaryColor:const Color.fromARGB(0, 27, 69, 113),
-        primaryColorDark: const Color.fromARGB(0, 27, 69, 113),
+              primaryColorDark: const Color.fromARGB(0, 27, 69, 113),
         primarySwatch: customMaterialColor.mdColor,
         appBarTheme: const AppBarTheme(
           // backgroundColor: Colors.white,

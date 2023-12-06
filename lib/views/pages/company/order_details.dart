@@ -64,16 +64,16 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 children: [
                   const SizedBox(height: 16.0),
                   Text(
-                    'Customer Name: ${orderDetails.customerName}',
+                    'اسم العميل: ${orderDetails.customerName}',
                     textAlign: TextAlign.right,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                   ),
-                  const SizedBox(height: 16.0),
+
                   Text(
-                    'Shipping Address: ${orderDetails.shippingAddress}',
+                    'عنوان الشحن: ${orderDetails.shippingAddress}',
                     textAlign: TextAlign.right,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/database_controller.dart';
 import 'package:flutter_ecommerce/models/orders_model.dart';
 import 'package:provider/provider.dart';
-
 import '../../widgets/orders_info_list_item.dart';
-import 'order_details.dart';
 
 class AllOrdersPage extends StatefulWidget {
+  
   const AllOrdersPage({Key? key}) : super(key: key);
 
   @override
@@ -87,23 +86,9 @@ class _AllOrdersPageState extends State<AllOrdersPage> {
                                     .toList();
                                 // debugPrint("${snapshot.error} ----------------------");
                                 if (products == null || products.isEmpty) {
-                                  //TODO only center with error
-                                  debugPrint(
-                                      "${snapshot.error} ---------------------- $snapshot");
-                                  return Center(
-                                    child: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const OrderDetailsPage(
-                                                      orderId:
-                                                          "sAjb18lDvCh8W5AxCXB5",
-                                                    )));
-                                      },
-                                    ),
+                                 
+                                  return const Center(
+                                    child: Text("مشاكل بالاتصال")
                                   );
                                 }
 

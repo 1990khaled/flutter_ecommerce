@@ -22,7 +22,6 @@ class _AddNewProductPageState extends State<AddNewProductPage> {
   final picker = ImagePicker();
   XFile? _image;
   bool _uploading = false;
-
   String _imageUrl = "_imageUrl";
   String _productName = " ";
   double _productDiscountValue = 1.0;

@@ -25,13 +25,13 @@ class HomePage extends StatelessWidget {
               alignment: Alignment.bottomRight,
               children: [
                 Image.asset(
-                  "assets/images/al-yassin-company.png",
+                  "assets/images/al-egyptianTal - backgroundApp.png",
                   width: double.infinity,
                   height: size.height * 0.27,
                   fit: BoxFit.cover,
                 ),
                 Opacity(
-                  opacity: 0.1,
+                  opacity: 0.05,
                   child: Container(
                     width: double.infinity,
                     height: size.height * 0.3,
@@ -44,9 +44,9 @@ class HomePage extends StatelessWidget {
                     vertical: 16.0,
                   ),
                   child: Text(
-                    'جميع الاسعار جملة فقط',
+                    'الاسعار المعلنة جملة فقط',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: const Color.fromARGB(255, 196, 201, 196),
+                          color: const Color.fromARGB(255, 255, 255, 255),
                           // fontWeight: FontWeight.bold,
                         ),
                   ),

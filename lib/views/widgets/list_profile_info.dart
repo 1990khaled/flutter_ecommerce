@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-
-import '../../models/user_modle.dart';
+import 'package:flutter_ecommerce/models/user_data.dart';
+import '../pages/editing/my_special_button.dart';
 
 class ListProfileInfo extends StatefulWidget {
-  final UserModle userModle;
+  final UserModel userModel;
 
   const ListProfileInfo({
     Key? key,
-    required this.userModle,
+    required this.userModel,
   }) : super(key: key);
 
   @override
@@ -21,50 +21,111 @@ class _ListProfileInfoState extends State<ListProfileInfo> {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(100)),
             child: Image.network(
-              widget.userModle.profileImg,
+              widget.userModel.profileImg,
               width: size.height * 0.20,
               height: size.height * 0.20,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Container(
-            margin: const EdgeInsets.all(10),
+            width: size.height * 0.50,
+            margin: const EdgeInsets.only(left: 10, right: 10),
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
                 color: const Color.fromARGB(255, 0, 0, 0),
-                width: 2,
               ),
             ),
             child: Text(
-              widget.userModle.name,
+              widget.userModel.name,
               maxLines: 2,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'الموبايل: ${widget.userModle.phoneNum}',
-            style: const TextStyle(fontSize: 16),
+
+          Container(
+            width: size.height * 0.50,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            child: Text(
+              'الموبايل: ${widget.userModel.phoneNum}',
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'اسم الشركة: ${widget.userModle.companyName}',
-            style: const TextStyle(fontSize: 16),
+          // const SizedBox(height: 8),
+          Container(
+            width: size.height * 0.50,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            child: Text(
+              'اسم الشركة: ${widget.userModel.companyName}',
+              style: const TextStyle(fontSize: 16),
+              maxLines: 2,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'العنوان: ${widget.userModle.adress}',
-            style: const TextStyle(fontSize: 16),
+
+          Container(
+            width: size.height * 0.50,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            child: Text(
+              'العنوان: ${widget.userModel.address}',
+              style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              softWrap: true,
+            ),
           ),
-         
+          //----------------------------------------------
+          if (widget.userModel.access == "adminRole")
+            Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    width: 2,
+                  ),
+                ),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const MySpecialButtonWidget()));
+                    },
+                    icon: const Icon(Icons.library_add))),
         ],
       ),
     );

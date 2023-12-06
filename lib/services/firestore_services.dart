@@ -8,6 +8,10 @@ class FirestoreServices {
 
   final _fireStore = FirebaseFirestore.instance;
 
+  CollectionReference collectionReference({required String path}) {
+    return _fireStore.collection(path);
+  }
+
   Future<void> setData({
     required String path,
     required Map<String, dynamic> data,
@@ -60,7 +64,7 @@ class FirestoreServices {
     Query Function(Query query)? queryBuilder,
     int Function(T lhs, T rhs)? sort,
   }) {
-    Query query = _fireStore.collection(path);
+    Query query = collectionReference(path: path);
     if (queryBuilder != null) {
       query = queryBuilder(query);
     }
