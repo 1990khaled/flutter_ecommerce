@@ -5,11 +5,11 @@ class DropDownMenuComponent extends StatelessWidget {
   final List<String> items;
   final String hint;
   const DropDownMenuComponent({
-    Key? key,
+    super.key,
     required this.onChanged,
     required this.items,
     required this.hint,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

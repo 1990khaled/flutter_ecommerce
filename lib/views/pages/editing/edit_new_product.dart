@@ -93,7 +93,7 @@ class _EditNewProductState extends State<EditNewProduct> {
                                 }
 
                                 return Builder(builder: (context) {
-                                  return GridView.builder(
+                                  return ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     itemCount: products.length,
                                     itemBuilder: (_, int index) => Padding(
@@ -109,16 +109,42 @@ class _EditNewProductState extends State<EditNewProduct> {
                                                             products[index].id,
                                                       )));
                                         },
-                                        onLongPress: () {},
+                                        onLongPress: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(actions: [
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                          leading: const Icon(
+                                                              Icons.add),
+                                                          title: const Text(
+                                                              'حذف '),
+                                                          onTap: () async {
+                                                            await database
+                                                                .deleteFromNewProduct(
+                                                                    products[
+                                                                        index]);
+                                                          }),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                        leading: const Icon(
+                                                            Icons.add),
+                                                        title:
+                                                            const Text('رجوع '),
+                                                        onTap: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                    ),
+                                                  ]));
+                                        },
                                         child: Center(
                                           child: ListItemHome(
                                               newProduct: products[index]),
                                         ),
                                       ),
-                                    ),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
                                     ),
                                   );
                                 });

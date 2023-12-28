@@ -1,4 +1,0 @@
-enum AuthFormType {
-  login,
-  register
-}

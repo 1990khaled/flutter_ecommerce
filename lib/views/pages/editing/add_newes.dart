@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../models/news_modle.dart';
 
@@ -9,7 +10,7 @@ class AddNewsPage extends StatefulWidget {
   const AddNewsPage({super.key});
 
   @override
-  _AddNewsPageState createState() => _AddNewsPageState();
+  State<AddNewsPage> createState() => _AddNewsPageState();
 }
 
 class _AddNewsPageState extends State<AddNewsPage> {
@@ -22,7 +23,6 @@ class _AddNewsPageState extends State<AddNewsPage> {
   //-------------------------------------------------- Build Context
   @override
   Widget build(BuildContext context) {
-    
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     NewsModel prouct = NewsModel(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -96,7 +96,6 @@ class _AddNewsPageState extends State<AddNewsPage> {
                         setState(() {
                           _imagUrl = value;
                         });
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Product image",
@@ -104,8 +103,7 @@ class _AddNewsPageState extends State<AddNewsPage> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
-                      keyboardType:
-                          TextInputType.number, // Set keyboard type to number
+                      // Set keyboard type to number
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Product image be empty";
@@ -125,21 +123,20 @@ class _AddNewsPageState extends State<AddNewsPage> {
                     ),
                     child: TextFormField(
                       onChanged: (value) {
-                      setState(() {
+                        setState(() {
                           _productUrl = value;
-                      });
+                        });
                       },
                       decoration: const InputDecoration(
-                        hintText: "Product _productUrl",
-                        labelText: "Product _productUrl",
+                        hintText: "Product _product Url",
+                        labelText: "Product _product Url",
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
-                      keyboardType:
-                          TextInputType.number, // Set keyboard type to number
+                      // Set keyboard type to number
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "_productUrl before discount cannot be empty";
+                          return "product Url before discount cannot be empty";
                         }
                         // Add more validation if needed
                         return null;
@@ -153,14 +150,28 @@ class _AddNewsPageState extends State<AddNewsPage> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () async {
-                    // Validate the form before submission
-                    if (_key.currentState!.validate()) {
-                      await addProductToFirestore(productData);
+                    bool result =
+                        await InternetConnectionChecker().hasConnection;
+                    if (result == true) {
+                      // Validate the form before submission
+                      if (_key.currentState!.validate()) {
+                        await addProductToFirestore(productData);
 
-                      // Optionally, show a success message or navigate to another screen
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Product added successfully!'),
+                          ),
+                        );
+                      }
+                    } else {
+                      // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Product added successfully!'),
+                          content: Text(
+                            'تفقد الاتصال بالانترنت',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       );
                     }

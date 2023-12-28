@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/database_controller.dart';
@@ -8,7 +9,7 @@ import '../../../services/firestore_services.dart';
 class NewsEditingPage extends StatefulWidget {
   final String newsId;
 
-  const NewsEditingPage({Key? key, required this.newsId}) : super(key: key);
+  const NewsEditingPage({super.key, required this.newsId});
 
   @override
   State<NewsEditingPage> createState() => _NewsEditingPageState();
@@ -71,48 +72,65 @@ class _NewsEditingPageState extends State<NewsEditingPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(labelText: 'Edit Title'),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _titleController,
+                      decoration:
+                          const InputDecoration(labelText: 'Edit Title'),
+                    ),
                   ),
-                  TextFormField(
-                    controller: _imgUrlController,
-                    decoration:
-                        const InputDecoration(labelText: 'Edit Image URL'),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _imgUrlController,
+                      decoration:
+                          const InputDecoration(labelText: 'Edit Image URL'),
+                    ),
                   ),
-                  TextFormField(
-                    controller: _urlController,
-                    decoration: const InputDecoration(labelText: 'Edit URL'),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _urlController,
+                      decoration: const InputDecoration(labelText: 'Edit URL'),
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        _updating = true; // Show CircularProgressIndicator
-                      });
-
-                      final NewsModel updatedNews = NewsModel(
-                        id: widget.newsId,
-                        title: _titleController.text,
-                        imgUrl: _imgUrlController.text,
-                        url: _urlController.text,
-                      );
-
-                      try {
-                        // Update Firestore data
-                        await database.updateNews(updatedNews);
-                        debugPrint(
-                            "${updatedNews.title} ---------------------------------------------------");
-
-                        // Navigate back after successful update
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // Handle Firestore update errors
-                        debugPrint("Firestore update error: $e");
+                      bool result =
+                          await InternetConnectionChecker().hasConnection;
+                      if (result == true) {
                         setState(() {
-                          _updating =
-                              false; // Hide CircularProgressIndicator on error
+                          _updating = true; // Show CircularProgressIndicator
                         });
+
+                        final NewsModel updatedNews = NewsModel(
+                          id: widget.newsId,
+                          title: _titleController.text,
+                          imgUrl: _imgUrlController.text,
+                          url: _urlController.text,
+                        );
+
+                        try {
+                          await database.updateNews(updatedNews);
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        } catch (e) {
+                          // Handle Firestore update errors
+                          debugPrint("Firestore update error: $e");
+                          setState(() {
+                            _updating =
+                                false; // Hide CircularProgressIndicator on error
+                          });
+                        }
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'تفقد الاتصال بالانترنت',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
                       }
                     },
                     child: const Text('Save Changes'),
@@ -123,92 +141,3 @@ class _NewsEditingPageState extends State<NewsEditingPage> {
     );
   }
 }
-
-
-// class _NewsEditingPageState extends State<NewsEditingPage> {
-//   final TextEditingController _titleController = TextEditingController();
-//   final TextEditingController _imgUrlController = TextEditingController();
-//   final TextEditingController _urlController = TextEditingController();
-//   String? _title;
-//   String? _imgUrl;
-//   String? _url;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     // Fetch the existing data using the newsId when the page initializes
-//     fetchNewsDetails();
-//   }
-
-//   Future<void> fetchNewsDetails() async {
-//     // Fetch news details using the provided newsId
-//     final newsDetails =
-//         await FirestoreServices.instance.getData(path: "news/${widget.newsId}");
-
-//     if (newsDetails != null) {
-//       setState(() {
-//         _title = newsDetails['title'] ?? '';
-//         _imgUrl = newsDetails['imgUrl'] ?? '';
-//         _url = newsDetails['url'] ?? '';
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final database = Provider.of<Database>(context);
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Edit News'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: [
-//             SizedBox(
-//               child: TextFormField(
-//                 controller: _titleController,
-//                 decoration: const InputDecoration(labelText: 'Edit Title'),
-//               ),
-//             ),
-//             SizedBox(
-//               child: TextFormField(
-//                 controller: _imgUrlController,
-//                 decoration: const InputDecoration(labelText: 'Edit Image URL'),
-//               ),
-//             ),
-//             SizedBox(
-//               child: TextFormField(
-//                 controller: _urlController,
-//                 decoration: const InputDecoration(labelText: 'Edit URL'),
-//               ),
-//             ),
-//             const SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 final NewsModel updatedNews = NewsModel(
-//                   id: widget.newsId,
-//                   title: _titleController.text,
-//                   imgUrl: _imgUrlController.text,
-//                   url: _urlController.text,
-//                 );
-
-//                 try {
-//                   // Update Firestore data
-//                   await database.updateNews(updatedNews);
-//                   debugPrint(
-//                       "${updatedNews.title} ---------------------------------------------------");
-//                 } catch (e) {
-//                   // Handle Firestore update errors
-//                   debugPrint("Firestore update error: $e");
-//                 }
-//               },
-//               child: const Text('Save Changes'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

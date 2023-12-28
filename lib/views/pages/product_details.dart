@@ -10,9 +10,9 @@ import 'package:provider/provider.dart';
 class ProductDetails extends StatefulWidget {
   final NewProduct newProduct;
   const ProductDetails({
-    Key? key,
+    super.key,
     required this.newProduct,
-  }) : super(key: key);
+  });
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -40,6 +40,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       // Check if the item is already in the cart
       final exists = await database.isItemInCart(widget.newProduct.title).first;
       if (exists) {
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -52,7 +53,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           },
         );
       } else {
-        database.addToCart(addToCartProduct);
+        await database.addToCart(addToCartProduct);
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
       }
     } catch (e) {
       return MainDialog(
@@ -66,16 +69,10 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final database = Provider.of<Database>(context);
+    final scaffoldBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_right_alt_sharp),
-            color: Colors.white,
-          )
-        ],
         centerTitle: true,
         title: Text(
           widget.newProduct.title,
@@ -85,33 +82,56 @@ class _ProductDetailsState extends State<ProductDetails> {
                 color: const Color.fromARGB(255, 255, 255, 255),
               ),
         ),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              widget.newProduct.imgUrl,
-              width: double.infinity,
-              height: size.height * 0.55,
-              fit: BoxFit.cover,
+            SizedBox(
+              height: size.height * 0.02,
             ),
-            const SizedBox(height: 8.0),
+            Container(
+              width: double.infinity,
+              height: size.height * 0.50,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: scaffoldBackgroundColor,
+                  width: 20.0, // Border width
+                ), // Rounded corners for the image
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0),
+                child: Image.network(
+                  widget.newProduct.imgUrl,
+                  width: double.infinity,
+                  height: size.height * 0.50,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.height * 0.05,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
+                horizontal: 8.0,
+                vertical: 6.0,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 24.0),
+                  // const SizedBox(height: 10.0),
                   ListTile(
                     title: Text(
                       maxLines: 4,
                       softWrap: true,
                       textAlign: TextAlign.right,
                       widget.newProduct.title,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -124,17 +144,47 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                     subtitle: Text(
                       '${widget.newProduct.script} : ${widget.newProduct.qunInCarton}',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                       textAlign: TextAlign.right,
                     ),
                   ),
-                  const SizedBox(height: 24.0),
-                  MainButton(
-                    text: 'اضافة الى طلبيتك',
-                    onTap: () => _addToCart(database),
-                    hasCircularBorder: true,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18.0,
+                      vertical: 4.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          ' السعر قبل الخصم  ${widget.newProduct.discountValue} ج',
+                          style:
+                              Theme.of(context).textTheme.titleMedium!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                          // textAlign: TextAlign.right,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.04,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 6.0,
+                    ),
+                    child: MainButton(
+                        text: 'اضافة الى طلبيتك',
+                        onTap: () async {
+                         await _addToCart(database);
+                        }
+                        // hasCircularBorder: true,
+                        ),
                   ),
                 ],
               ),
@@ -148,6 +198,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
 
 // ------------------------------------------------------
-// new product changed with product details : its mean for new product details we use product details we el aks
+// new product changed with product details :
+//its mean for new product details we use product details we el aks
 
 

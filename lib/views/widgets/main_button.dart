@@ -6,17 +6,16 @@ class MainButton extends StatelessWidget {
   final bool hasCircularBorder;
 
   const MainButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTap,
     this.hasCircularBorder = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    
     return SizedBox(
-      width:double.infinity,
+      width: double.infinity,
       height: 50,
       child: ElevatedButton(
         onPressed: onTap,
@@ -30,11 +29,13 @@ class MainButton extends StatelessWidget {
         ),
         child: Text(
           text,
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
   }
-} 
+}
+
 // ----------------------------------------------------------------
 class SmallMainButton extends StatelessWidget {
   final String text;
@@ -42,30 +43,31 @@ class SmallMainButton extends StatelessWidget {
   final bool hasCircularBorder;
 
   const SmallMainButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTap,
     this.hasCircularBorder = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      width:size.height*0.3,
+      width: size.height * 0.3,
       height: 50,
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).primaryColor,
-          shape: hasCircularBorder
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                )
-              : null,
+          // shape: hasCircularBorder
+          //     ? RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(24.0),
+          //       )
+          //     : null,
         ),
         child: Text(
           text,
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

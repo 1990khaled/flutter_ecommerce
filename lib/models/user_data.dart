@@ -1,21 +1,28 @@
 class UserData {
   final String uid;
-  final String email;
+  final String phoneNumber;
+  final String role;
 
-  UserData({required this.uid, required this.email});
+  UserData({
+    required this.uid,
+    required this.phoneNumber,
+    required this.role
+  });
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
     result.addAll({'uid': uid});
-    result.addAll({'email': email});
+    result.addAll({'phoneNumber': phoneNumber});
+result.addAll({'role': role});
     return result;
   }
 
   factory UserData.fromMap(Map<String, dynamic> map, String documentId) {
     return UserData(
       uid: documentId,
-      email: map['email'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+       role: map['role'] ?? '',
     );
   }
 }
@@ -24,14 +31,12 @@ class UserData {
 class UserModel {
   String phoneNum;
   String profileImg;
-  String name;
   String companyName;
   String address;
   String access;
   String id;
 
   UserModel({
-    this.name = "name",
     this.phoneNum = "0000000000000",
     this.profileImg = "image",
     this.companyName = "companyName",
@@ -42,7 +47,6 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
       'phoneNum': phoneNum,
       'profileImg': profileImg,
       'companyName': companyName,
@@ -54,7 +58,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
     return UserModel(
-      name: map['name'] ?? '', // handle nullability or default value here
+      // handle nullability or default value here
       phoneNum: map['phoneNum'] ?? '',
       profileImg: map['profileImg'] ?? '',
       companyName: map['companyName'] ?? '',

@@ -3,6 +3,9 @@ class ApiPath {
   static String newProduct() => 'newproduct/';
   static String newsStream() => 'news/';
   static String ordersCollection(String orderId) => 'orders/$orderId';
+  static String productsItem(String itemId) => 'products/$itemId';
+  static String newProductItem(String itemId) => 'newproduct/$itemId';
+  static String newsItem(String itemId) => 'news/$itemId';
   // -------------------------------------------------------------
   static String profileInfoStream() => 'profileInfoStream/';
   static String profileInfo(
@@ -40,7 +43,7 @@ class ApiPath {
   static String getUserInformation(
     String uid,
   ) =>
-      'users/$uid/profileInfo/npyZVhIDq34g3vTR7Prq';
+      'users/$uid/profileInfo/npyZVhIDq34g3vTR7Prq/';
 }
 
 

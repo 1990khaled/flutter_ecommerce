@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/add_to_cart_model.dart';
 import 'package:flutter_ecommerce/models/product.dart';
@@ -20,6 +21,7 @@ abstract class Database {
   Stream<bool> isItemInFavourite(String productId);
   Stream<List<AddToCartModel>> myProductsCart();
   Stream<List<OrdersModel>> myOrdersStream();
+  Stream<List<UserModel>> getUserInformationStream();
   Stream<bool> isItemInCart(String productId);
   Future<void> setUserData(UserData userData);
   Future<void> addProduct(Product product);
@@ -38,6 +40,10 @@ abstract class Database {
   Future<void> addToMyOrders(OrdersModel product, String orderId);
   Future<void> updateUserInformation(UserModel userModel);
   Future<UserModel?> getUserInformation();
+  Future<void> clearCart(String uid);
+  Future<void> deleteFromProduct(Product product);
+  Future<void> deleteFromNewProduct(NewProduct product);
+  Future<void> deleteFromNews(NewsModel news);
   // Future<String> getUserId(String uid);
   // Stream<List<OrdersModel>> userOrdersStream();
   // Future<void> addToUserOrders(OrdersModel product);
@@ -138,6 +144,12 @@ class FirestoreDatabase implements Database {
     );
   }
 
+  @override
+  Stream<List<UserModel>> getUserInformationStream() =>
+      _service.collectionsStream(
+        path: "users/$uid/profileInfo/",
+        builder: (data, documentId) => UserModel.fromMap(data!, documentId),
+      );
 //-----------------------------------------------------------------------
   @override
   Future<void> addToCart(AddToCartModel product) async => _service.setData(
@@ -185,6 +197,7 @@ class FirestoreDatabase implements Database {
     } catch (e) {
       debugPrint('Error adding order: $e');
       // Handle error accordingly
+      return;
     }
   }
 
@@ -200,6 +213,19 @@ class FirestoreDatabase implements Database {
   //       data: product.toMap(),
   //     );
   //---------------------------------------------------------------
+  @override
+  Future<void> deleteFromNews(NewsModel news) async => _service.deleteData(
+        path: ApiPath.newsItem(news.id),
+      );
+  @override
+  Future<void> deleteFromNewProduct(NewProduct product) async =>
+      _service.deleteData(
+        path: ApiPath.newProductItem(product.id),
+      );
+  @override
+  Future<void> deleteFromProduct(Product product) async => _service.deleteData(
+        path: ApiPath.productsItem(product.id),
+      );
 
   // @override
   // Stream<List<DeliveryMethod>> deliveryMethodsStream() =>
@@ -233,8 +259,9 @@ class FirestoreDatabase implements Database {
         data: existingData,
       );
     } else {
+      return;
       // Handle the case where the document doesn't exist
-      print('Document does not exist!');
+      // print('Document does not exist!');
     }
   }
 
@@ -255,26 +282,21 @@ class FirestoreDatabase implements Database {
       final collections = await collectionRef.get();
 
       if (collections.docs.isNotEmpty) {
-        // Collection exists, proceed with retrieving user data
         final userData = await FirestoreServices.instance.getData(
           path: ApiPath.getUserInformation(uid),
         );
 
-        // If userData is null or empty, handle accordingly
         if (userData != null && userData.isNotEmpty) {
           return UserModel.fromMap(userData, ApiPath.getUserInformation(uid));
         } else {
-          // Handle if userData is null or empty
           return null;
         }
       } else {
-        // Collection doesn't exist, create the collection or handle accordingly
-        // ... (Logic to create the collection or handle the scenario)
         return null;
       }
     } catch (e) {
-      debugPrint("Firestore Error: $e");
-      rethrow; // Propagate the error further if needed
+      // debugPrint("Firestore Error: $e");
+      rethrow;
     }
   }
 
@@ -291,15 +313,10 @@ class FirestoreDatabase implements Database {
       if (existingData != null) {
         // Update logic: Replace existing fields with provided data if available
         final Map<String, dynamic> updatedData = {
-          if (userModel.address != null) 'address': userModel.address,
-          if (userModel.name != null) 'name': userModel.name,
-          if (userModel.companyName != null)
-            'companyName': userModel.companyName,
-
-          // Add other fields you want to update similarly
+          'address': userModel.address,
+          'companyName': userModel.companyName,
         };
 
-        // Merge updatedData with existingData to keep the old data intact
         final mergedData = {...existingData, ...updatedData};
 
         // Check if any update was made, then update the Firestore document
@@ -308,20 +325,22 @@ class FirestoreDatabase implements Database {
             path: ApiPath.userInformation(uid),
             data: mergedData,
           );
-          // Successful update, log a message
-          debugPrint("News updated successfully!");
+          // // Successful update, log a message
+          // debugPrint("News updated successfully!");
         } else {
-          // No updates provided in newsModel
-          debugPrint("No updates provided for ID: ${userModel.id}");
+          return;
+          // // No updates provided in newsModel
+          // debugPrint("No updates provided for ID: ${userModel.id}");
         }
       } else {
-        // Document doesn't exist
-        debugPrint("Document does not exist for ID: ${userModel.id}");
+        return;
+        // // Document doesn't exist
+        // debugPrint("Document does not exist for ID: ${userModel.id}");
       }
     } catch (e) {
-      // Firestore operation error
-      debugPrint("Firestore Error: $e");
-      throw e; // Propagate the error further if needed
+      // // Firestore operation error
+      // debugPrint("Firestore Error: $e");
+      rethrow; // Propagate the error further if needed
     }
   }
 //--------------------------------------------------
@@ -338,9 +357,9 @@ class FirestoreDatabase implements Database {
       if (existingData != null) {
         // Update logic: Replace existing fields with provided data if available
         final Map<String, dynamic> updatedData = {
-          if (newsModel.title != null) 'title': newsModel.title,
-          if (newsModel.imgUrl != null) 'imgUrl': newsModel.imgUrl,
-          if (newsModel.url != null) 'url': newsModel.url,
+          'title': newsModel.title,
+          'imgUrl': newsModel.imgUrl,
+          'url': newsModel.url,
           // Add other fields you want to update similarly
         };
 
@@ -356,17 +375,19 @@ class FirestoreDatabase implements Database {
           // Successful update, log a message
           debugPrint("News updated successfully!");
         } else {
-          // No updates provided in newsModel
-          debugPrint("No updates provided for ID: ${newsModel.id}");
+          return;
+          // // No updates provided in newsModel
+          // debugPrint("No updates provided for ID: ${newsModel.id}");
         }
       } else {
-        // Document doesn't exist
-        debugPrint("Document does not exist for ID: ${newsModel.id}");
+        return;
+        // // Document doesn't exist
+        // debugPrint("Document does not exist for ID: ${newsModel.id}");
       }
     } catch (e) {
       // Firestore operation error
       debugPrint("Firestore Error: $e");
-      throw e; // Propagate the error further if needed
+      rethrow; // Propagate the error further if needed
     }
   }
 
@@ -381,16 +402,14 @@ class FirestoreDatabase implements Database {
       if (existingData != null) {
         // Update logic: Replace existing fields with provided data if available
         final Map<String, dynamic> updatedData = {
-          if (newProduct.title != null) 'title': newProduct.title,
-          if (newProduct.imgUrl != null) 'imgUrl': newProduct.imgUrl,
-          if (newProduct.discountValue != null)
-            'discountValue': newProduct.discountValue,
-          if (newProduct.maximum != null) 'maximum': newProduct.maximum,
-          if (newProduct.price != null) 'price': newProduct.price,
-          if (newProduct.script != null) 'script': newProduct.script,
-          if (newProduct.minimum != null) 'minimum': newProduct.minimum,
-          if (newProduct.qunInCarton != null)
-            'qunInCarton': newProduct.qunInCarton,
+          'title': newProduct.title,
+          'imgUrl': newProduct.imgUrl,
+          'discountValue': newProduct.discountValue,
+          'maximum': newProduct.maximum,
+          'price': newProduct.price,
+          'script': newProduct.script,
+          'minimum': newProduct.minimum,
+          'qunInCarton': newProduct.qunInCarton,
           // Add other fields you want to update similarly
         };
 
@@ -406,17 +425,19 @@ class FirestoreDatabase implements Database {
           // Successful update, log a message
           debugPrint("News updated successfully!");
         } else {
-          // No updates provided in newsModel
-          debugPrint("No updates provided for ID: ${newProduct.id}");
+          return;
+          // // No updates provided in newsModel
+          // debugPrint("No updates provided for ID: ${newProduct.id}");
         }
       } else {
-        // Document doesn't exist
-        debugPrint("Document does not exist for ID: ${newProduct.id}");
+        return;
+        // // Document doesn't exist
+        // debugPrint("Document does not exist for ID: ${newProduct.id}");
       }
     } catch (e) {
       // Firestore operation error
       debugPrint("Firestore Error: $e");
-      throw e; // Propagate the error further if needed
+      rethrow; // Propagate the error further if needed
     }
   }
 
@@ -431,15 +452,14 @@ class FirestoreDatabase implements Database {
       if (existingData != null) {
         // Update logic: Replace existing fields with provided data if available
         final Map<String, dynamic> updatedData = {
-          if (newProduct.title != null) 'title': newProduct.title,
-          if (newProduct.imgUrl != null) 'imgUrl': newProduct.imgUrl,
-          if (newProduct.category != null) 'category': newProduct.category,
-          if (newProduct.maximum != null) 'maximum': newProduct.maximum,
-          if (newProduct.price != null) 'price': newProduct.price,
-          if (newProduct.script != null) 'script': newProduct.script,
-          if (newProduct.minimum != null) 'minimum': newProduct.minimum,
-          if (newProduct.qunInCarton != null)
-            'qunInCarton': newProduct.qunInCarton,
+          'title': newProduct.title,
+          'imgUrl': newProduct.imgUrl,
+          'category': newProduct.category,
+          'maximum': newProduct.maximum,
+          'price': newProduct.price,
+          'script': newProduct.script,
+          'minimum': newProduct.minimum,
+          'qunInCarton': newProduct.qunInCarton,
           // Add other fields you want to update similarly
         };
 
@@ -452,20 +472,39 @@ class FirestoreDatabase implements Database {
             path: "products/${newProduct.id}",
             data: mergedData,
           );
-          // Successful update, log a message
-          debugPrint("News updated successfully!");
         } else {
+          return;
           // No updates provided in newsModel
-          debugPrint("No updates provided for ID: ${newProduct.id}");
+          // debugPrint("No updates provided for ID: ${newProduct.id}");
         }
       } else {
+        return;
         // Document doesn't exist
-        debugPrint("Document does not exist for ID: ${newProduct.id}");
+        // debugPrint("Document does not exist for ID: ${newProduct.id}");
       }
     } catch (e) {
       // Firestore operation error
-      debugPrint("Firestore Error: $e");
-      throw e; // Propagate the error further if needed
+
+      rethrow; // Propagate the error further if needed
+    }
+  }
+
+  @override
+  Future<void> clearCart(String uid) async {
+    final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    try {
+      final userRef = fireStore.collection('users').doc(uid);
+      final cartSnapshot = await userRef.collection('cart').get();
+
+      final List<Future<void>> deleteFutures = [];
+      for (final doc in cartSnapshot.docs) {
+        final reference = doc.reference;
+        deleteFutures.add(reference.delete());
+      }
+      await Future.wait(deleteFutures);
+    } catch (e) {
+      rethrow;
+      // Handle or log the error as needed
     }
   }
 }

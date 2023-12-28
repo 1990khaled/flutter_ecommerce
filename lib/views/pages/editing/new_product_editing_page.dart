@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/database_controller.dart';
@@ -107,7 +108,7 @@ class _NewProductEditingState extends State<NewProductEditing> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _titleController,
                         decoration:
@@ -115,7 +116,7 @@ class _NewProductEditingState extends State<NewProductEditing> {
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _imgUrlController,
                         decoration:
@@ -123,88 +124,104 @@ class _NewProductEditingState extends State<NewProductEditing> {
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _scriptController,
-                        decoration: const InputDecoration(
-                            labelText: 'Edit _scriptController'),
+                        decoration:
+                            const InputDecoration(labelText: 'Edit script'),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _qunInCartonController,
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Edit _qunInCartonController'),
+                            labelText: 'Edit quantity In Carton'),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _priceController,
-                        decoration: const InputDecoration(
-                            labelText: 'Edit _priceController'),
+                        keyboardType: TextInputType.number,
+                        decoration:
+                            const InputDecoration(labelText: 'Edit price'),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _minimumController,
-                        decoration: const InputDecoration(
-                            labelText: 'Edit _minimumController'),
+                        keyboardType: TextInputType.number,
+                        decoration:
+                            const InputDecoration(labelText: 'Edit minimum'),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _maximumController,
-                        decoration: const InputDecoration(
-                            labelText: 'Edit _maximumController'),
+                        keyboardType: TextInputType.number,
+                        decoration:
+                            const InputDecoration(labelText: 'Edit maXimum'),
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextFormField(
                         controller: _discountValueController,
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                            labelText: 'Edit _discountValueController'),
+                            labelText: 'Edit discount price Controller'),
                       ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
-                        setState(() {
-                          _updating = true; // Show CircularProgressIndicator
-                        });
-
-                        final NewProduct updatedNews = NewProduct(
-                          id: widget.newProductId,
-                          title: _titleController.text,
-                          imgUrl: _imgUrlController.text,
-                          price: double.parse(_priceController.text),
-                          qunInCarton: int.parse(_qunInCartonController.text),
-                          discountValue:
-                              double.parse(_discountValueController.text),
-                          maximum: int.parse(_maximumController.text),
-                          minimum: int.parse(_minimumController.text),
-                          script: _scriptController.text,
-                        );
-
-                        try {
-                          // Update Firestore data
-                          await database.updateNewProduct(updatedNews);
-                          debugPrint(
-                              "${updatedNews.title} ---------------------------------------------------");
-
-                          // Navigate back after successful update
-                          Navigator.pop(context);
-                        } catch (e) {
-                          // Handle Firestore update errors
-                          debugPrint("Firestore update error: $e");
+                        bool result =
+                            await InternetConnectionChecker().hasConnection;
+                        if (result == true) {
                           setState(() {
-                            _updating =
-                                false; // Hide CircularProgressIndicator on error
+                            _updating = true; // Show CircularProgressIndicator
                           });
+
+                          final NewProduct updatedNews = NewProduct(
+                            id: widget.newProductId,
+                            title: _titleController.text,
+                            imgUrl: _imgUrlController.text,
+                            price: double.parse(_priceController.text),
+                            qunInCarton: int.parse(_qunInCartonController.text),
+                            discountValue:
+                                double.parse(_discountValueController.text),
+                            maximum: int.parse(_maximumController.text),
+                            minimum: int.parse(_minimumController.text),
+                            script: _scriptController.text,
+                          );
+
+                          try {
+                            // Update Firestore data
+                            await database.updateNewProduct(updatedNews);
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                          } catch (e) {
+                            // Handle Firestore update errors
+                            debugPrint("Firestore update error: $e");
+                            setState(() {
+                              _updating =
+                                  false; // Hide CircularProgressIndicator on error
+                            });
+                          }
+                        }else{
+                           // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'تفقد الاتصال بالانترنت',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
                         }
                       },
                       child: const Text('Save Changes'),

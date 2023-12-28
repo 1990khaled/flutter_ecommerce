@@ -7,7 +7,7 @@ import '../../widgets/list_item_news.dart';
 import 'news_editing_page.dart';
 
 class EditNews extends StatefulWidget {
-  const EditNews({Key? key}) : super(key: key);
+  const EditNews({super.key});
 
   @override
   State<EditNews> createState() => _EditNewsState();
@@ -110,7 +110,35 @@ class _EditNewsState extends State<EditNews> {
                                                       )));
                                         },
                                         onLongPress: () {
-                                          
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(actions: [
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                          leading: const Icon(
+                                                              Icons.add),
+                                                          title: const Text(
+                                                              'حذف '),
+                                                          onTap: () async {
+                                                            await database
+                                                                .deleteFromNews(
+                                                                    products[
+                                                                        index]);
+                                                          }),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                        leading: const Icon(
+                                                            Icons.add),
+                                                        title:
+                                                            const Text('رجوع '),
+                                                        onTap: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                    ),
+                                                  ]));
                                         },
                                         child: ListItemNews(
                                             newsModel: products[index]),
@@ -132,7 +160,7 @@ class _EditNewsState extends State<EditNews> {
               ),
             )),
           ),
-        ]),
+      ]),
     );
   }
 }

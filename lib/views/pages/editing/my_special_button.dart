@@ -9,7 +9,9 @@ import 'edit_news.dart';
 import 'edit_product.dart';
 
 class MySpecialButtonWidget extends StatelessWidget {
-  const MySpecialButtonWidget({super.key});
+  final String phoneNum;
+  final String access;
+  const MySpecialButtonWidget({super.key, required this.phoneNum, required this.access});
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +153,10 @@ class MySpecialButtonWidget extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AllOrdersPage()));
+                            builder: (context) => AllOrdersPage(
+                                  phoneNum: phoneNum,
+                                 
+                                )));
                   }),
             ),
           ],

@@ -7,10 +7,10 @@ class ListHeader extends StatelessWidget {
   final String description;
 
   const ListHeader({
-    Key? key,
+    super.key,
     required this.title,
     this.onTap,
-    required this.description,}) : super(key: key);
+    required this.description,});
 
   @override
   Widget build(BuildContext context) {

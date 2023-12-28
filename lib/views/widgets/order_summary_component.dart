@@ -4,10 +4,10 @@ class OrderSummaryComponent extends StatelessWidget {
   final String title;
   final String value;
   const OrderSummaryComponent({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

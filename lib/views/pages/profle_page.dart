@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/auth_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../controllers/database_controller.dart';
 import '../../models/user_data.dart';
 import '../widgets/list_profile_info.dart';
 import '../widgets/main_button.dart';
+import '../widgets/snacks_bar.dart';
 import 'edit_user_information.dart';
 import 'user_orders.dart';
 
-class ProfilePage extends StatelessWidget {
-  late UserModel user;
-   ProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({
+    super.key,
+  });
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   Future<void> _logout(AuthController model, context) async {
     try {
       await model.logout();
@@ -24,31 +32,45 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var specialController = Provider.of<SpecialController>(context);
+    // int timeDuration = 20;
+
     final size = MediaQuery.of(context).size;
     final database = Provider.of<Database>(context);
-
+    late List<UserModel?> user;
+    // Changed UserModel to UserModel?
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: EdgeInsets.only(
+              top: size.height * 0.06,
+              left: size.height * 0.02,
+              right: size.height * 0.02),
           child: Column(
             children: [
               SizedBox(
                 height: size.height * 0.70,
-                child: FutureBuilder<UserModel?>(
-                  future: database.getUserInformation(),
+                child: StreamBuilder<List<UserModel>>(
+                  stream: database.getUserInformationStream(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final userModel = snapshot.data!;
-                    user = userModel;
-                      return ListProfileInfo(userModel: userModel);
-                    }
-                    if (snapshot.data == null) {
-                      return const Center(child: Text("من فضلك أدخل بياناتك"));
+                    if (snapshot.connectionState == ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        user = snapshot.data!;
+                        if (user.isNotEmpty) {
+                          return ListProfileInfo(
+                            userModel: user[0]!,
+                          );
+                        } else {
+                          return const Center(
+                              child: Text("من فضلك ادخل بياناتك"));
+                        }
+                      } else {
+                        return const Center(
+                            child: Text("من فضلك ادخل بياناتك"));
+                      }
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                          child: CircularProgressIndicator(strokeWidth: 2));
                     }
                   },
                 ),
@@ -59,24 +81,38 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const EditUserInformation(),
-                        ),
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const EditUserInformation(),
+                      ));
                     },
                     child: const Text(
                       "تعديل بياناتي",
                     ),
                   ),
                   ElevatedButton(
+                    onPressed: () async {
+                      _launchURL();
+                    },
+                    child: const Text(
+                      "تواصل معنا ",
+                    ),
+                  ),
+                  ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              UserOrderPage(customerName: user.name),
-                        ),
-                      );
+                      if (
+                          user.isNotEmpty) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UserOrderPage(
+                              companyName: user[0]!.companyName,
+                              phoneNum:
+                                  user[0]!.phoneNum, // Ensure null safety here
+                            ),
+                          ),
+                        );
+                      } else {
+                        showSnackbar(context, 'لا يوجد اي طلبيات حاليا');
+                      }
                     },
                     child: const Text(
                       "طلبيـــــاتـي",
@@ -87,15 +123,15 @@ class ProfilePage extends StatelessWidget {
               Consumer<AuthController>(
                 builder: (_, model, __) => Column(
                   children: [
-                    // const Spacer(),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 20),
-                      child: SmallMainButton(
-                          text: 'خروج من الحساب',
-                          onTap: () {
-                            _logout(model, context);
-                          }),
+                          horizontal: 10.0, vertical: 10),
+                      child: MainButton(
+                        text: 'خروج من الحساب',
+                        onTap: () {
+                          _logout(model, context);
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -105,5 +141,16 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future _launchURL() async {
+  String facebookUrl =
+      "https://www.facebook.com/profile.php?id=61554534424647&mibextid=ZbWKwL";
+  Uri url = Uri.parse(facebookUrl);
+  if (await launchUrl(url)) {
+    await launchUrl(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

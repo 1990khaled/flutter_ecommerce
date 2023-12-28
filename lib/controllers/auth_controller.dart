@@ -1,64 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/database_controller.dart';
-import 'package:flutter_ecommerce/models/user_data.dart';
 import 'package:flutter_ecommerce/services/auth.dart';
-import 'package:flutter_ecommerce/utilities/constants.dart';
-import 'package:flutter_ecommerce/utilities/enums.dart';
 
 class AuthController with ChangeNotifier {
   final AuthBase auth;
-  String email;
-  String password;
-  AuthFormType authFormType;
-  // TODO: It's not a best practice thing but it's temporary
-  final database = FirestoreDatabase('123');
+  String address;
+  String imageUrl;
+  String companyName;
+  String phoneNumber;
+  String otp;
+  final database = FirestoreDatabase(
+      '123'); // Replace '123' with your user ID or other appropriate identifier
 
   AuthController({
     required this.auth,
-    this.email = '',
-    this.password = '',
-    this.authFormType = AuthFormType.login,
+    this.imageUrl = '',
+    this.address = '',
+    this.companyName = '',
+    this.phoneNumber = '',
+    this.otp = '',
   });
 
-  Future<void> submit() async {
-    try {
-      if (authFormType == AuthFormType.login) {
-        await auth.loginWithEmailAndPassword(email, password);
-      } else {
-        final user = await auth.signUpWithEmailAndPassword(email, password);
-        await database.setUserData(UserData(
-          uid: user?.uid ?? documentIdFromLocalData(),
-          email: email,
-        ));
-      }
-    } catch (e) {
-      rethrow;
-    }
+  // Future<void> submitSignInWithPhone(
+  //     BuildContext context, String phoneNumber) async {
+  //   if (phoneNumber.isEmpty) {
+  //     throw 'Phone number is required.';
+  //   }
+
+  //   try {
+  //     await auth.signInWithPhoneNumber(context, phoneNumber);
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
+  // Future<void> submitSignInWithPhone(
+  //     BuildContext context, String phoneNumber) async {
+  //   if (phoneNumber.isEmpty) {
+  //     throw 'Email and password are required.';
+  //   }
+  //   try {
+  //     await auth.signInWithPhoneNumber(context, phoneNumber);
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
+  void updatePhone(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+    notifyListeners();
   }
 
-  void toggleFormType() {
-    final formType = authFormType == AuthFormType.login
-        ? AuthFormType.register
-        : AuthFormType.login;
-    copyWith(
-      email: '',
-      password: '',
-      authFormType: formType,
-    );
+  void updateImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+    notifyListeners();
   }
 
-  void updateEmail(String email) => copyWith(email: email);
+  void updateCompanyName(String companyName) {
+    this.companyName = companyName;
+    notifyListeners();
+  }
 
-  void updatePassword(String password) => copyWith(password: password);
+  void updateAddress(String address) {
+    this.address = address;
+    notifyListeners();
+  }
 
   void copyWith({
-    String? email,
-    String? password,
-    AuthFormType? authFormType,
+    String? address,
+    String? imageUrl,
+    String? companyName,
+    String? phoneNumber,
   }) {
-    this.email = email ?? this.email;
-    this.password = password ?? this.password;
-    this.authFormType = authFormType ?? this.authFormType;
+    this.address = address ?? this.address;
+    this.imageUrl = imageUrl ?? this.imageUrl;
+    this.companyName = companyName ?? this.companyName;
+    this.phoneNumber = phoneNumber ?? this.phoneNumber;
+
     notifyListeners();
   }
 

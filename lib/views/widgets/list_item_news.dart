@@ -7,9 +7,9 @@ class ListItemNews extends StatefulWidget {
   final NewsModel newsModel;
 
   const ListItemNews({
-    Key? key,
+    super.key,
     required this.newsModel,
-  }) : super(key: key);
+  });
 
   @override
   State<ListItemNews> createState() => _ListItemNewsState();
@@ -26,12 +26,19 @@ class _ListItemNewsState extends State<ListItemNews> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
             child: Placeholder(
-              child: Image.network(
-                widget.newsModel.imgUrl,
-                width: size.height * 0.20,
-                height: size.height * 0.18,
-                fit: BoxFit.cover,
-              ),
+              child: Image.network(widget.newsModel.imgUrl,
+                  width: size.height * 0.20,
+                  height: size.height * 0.18,
+                  fit: BoxFit.cover, errorBuilder: (BuildContext context,
+                      Object exception, StackTrace? stackTrace) {
+                return SizedBox(
+                  width: size.height * 0.20,
+                  height: size.height * 0.18,
+                  child: const Center(child: Text("لا يوجد صورة")),
+                  // Placeholder color for the error case
+                  // You can also add an icon or text to indicate the error
+                );
+              }),
             ),
           ),
         ),

@@ -8,7 +8,9 @@ import '../../../models/add_to_cart_model.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   final String orderId;
-  const OrderDetailsPage({Key? key, required this.orderId}) : super(key: key);
+  final String phoneNum;
+  const OrderDetailsPage(
+      {super.key, required this.orderId, required this.phoneNum});
 
   @override
   State<OrderDetailsPage> createState() => _OrderDetailsPageState();
@@ -71,9 +73,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           color: Colors.black,
                         ),
                   ),
-
                   Text(
                     'عنوان الشحن: ${orderDetails.shippingAddress}',
+                    textAlign: TextAlign.right,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Text(
+                    'رقم الهاتف: ${widget.phoneNum}',
                     textAlign: TextAlign.right,
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
@@ -89,12 +95,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     },
                   ),
                   const SizedBox(height: 25.0),
-                  Text(
-                    'اجمالي الحساب : ${orderDetails.totalAmount}',
-                    textAlign: TextAlign.right,
-                    style: Theme.of(context).textTheme.titleSmall,
+                  Center(
+                    child: Text(
+                      'اجمالي الحساب : ${orderDetails.totalAmount}',
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
-                  // Other components or summary can be added here if needed
                 ],
               ),
             ),

@@ -40,7 +40,7 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
       child: SizedBox(
         height: size.height * 0.23,
         child: Card(
-          color: Colors.white54,
+          color: Colors.white70,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
@@ -94,8 +94,10 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(),
                 ),
                 trailing: IconButton(
-                    onPressed: () {
-                      database.removeFromFavourite(widget.favouriteModel);
+                    onPressed: () async {
+
+                     await database.removeFromFavourite(widget.favouriteModel);
+
                     },
                     icon: const Icon(
                       Icons.delete,

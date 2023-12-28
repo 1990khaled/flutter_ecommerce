@@ -27,7 +27,7 @@ class _EditProductState extends State<EditProduct> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final database = Provider.of<Database>(context);
-    bool isSearching = false;
+   
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(),
@@ -54,7 +54,7 @@ class _EditProductState extends State<EditProduct> {
           onChanged: (newValue) async {
             setState(() {
               if (newValue.isNotEmpty) {
-                isSearching = true;
+                
                 value = newValue;
               }
             });
@@ -62,7 +62,7 @@ class _EditProductState extends State<EditProduct> {
         ),
       ),
       body: Stack(children: [
-        if (isSearching = true)
+        
           SafeArea(
               child: Padding(
             padding:
@@ -107,7 +107,33 @@ class _EditProductState extends State<EditProduct> {
                                                       products[index].id,
                                                 )));
                                   },
-                                  onLongPress: () {},
+                                  onLongPress: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(actions: [
+                                              PopupMenuItem(
+                                                child: ListTile(
+                                                    leading:
+                                                        const Icon(Icons.add),
+                                                    title: const Text('حذف '),
+                                                    onTap: () async {
+                                                      await database
+                                                          .deleteFromProduct(
+                                                              products[index]);
+                                                    }),
+                                              ),
+                                              PopupMenuItem(
+                                                child: ListTile(
+                                                  leading:
+                                                      const Icon(Icons.add),
+                                                  title: const Text('رجوع '),
+                                                  onTap: () =>
+                                                      Navigator.pop(context),
+                                                ),
+                                              ),
+                                            ]));
+                                  },
                                   child: Center(
                                     child: ListItemAccessories(
                                         product: products[index]),

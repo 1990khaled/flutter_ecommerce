@@ -16,8 +16,8 @@ class NewProduct {
     this.discountValue = 0.1,
     required this.qunInCarton,
     this.script = "الكمية داخل العبوة ",
-    this.maximum = 20,
-    this.minimum = 5,
+    this.maximum = 5,
+    this.minimum = 1,
   });
 
   Map<String, dynamic> toMap() {

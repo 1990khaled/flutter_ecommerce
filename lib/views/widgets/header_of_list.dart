@@ -4,10 +4,10 @@ class HeaderOfList extends StatelessWidget {
   final String title;
   final String description;
   const HeaderOfList({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,12 +6,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
 
   @override
-  _AddProductState createState() => _AddProductState();
+  State<AddProduct> createState() => _AddProductState();
 }
 
 class _AddProductState extends State<AddProduct> {
@@ -238,14 +239,14 @@ class _AddProductState extends State<AddProduct> {
                           _productScript = value;
                         },
                         decoration: const InputDecoration(
-                          hintText: "_productScript",
-                          labelText: "_productScript",
+                          hintText: "product Script",
+                          labelText: "produc tScript",
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(8.0),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "_productScript cannot be empty";
+                            return "product Script cannot be empty";
                           }
                           return null;
                         },
@@ -393,8 +394,8 @@ class _AddProductState extends State<AddProduct> {
                           }
                         },
                         decoration: const InputDecoration(
-                          hintText: "Product maximum Quan",
-                          labelText: "Product maximum Quan",
+                          hintText: "Product maximum quantity",
+                          labelText: "Product maximum quantity",
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(8.0),
                         ),
@@ -402,7 +403,7 @@ class _AddProductState extends State<AddProduct> {
                             TextInputType.number, // Set keyboard type to number
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Product Max Quan cannot be empty";
+                            return "Product Max quantity cannot be empty";
                           }
                           // Add more validation if needed
                           return null;
@@ -418,23 +419,30 @@ class _AddProductState extends State<AddProduct> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () async {
-                    // Validate the form before submission
-                    if (_key.currentState!.validate()) {
-                      // Trigger image upload if an image is selected
-                      if (_image?.path == "_imageUrl" || _image == null) {
-                        await _uploadImageToFirebase();
+                    bool result =
+                        await InternetConnectionChecker().hasConnection;
+                    if (result == true) {
+                      if (_key.currentState!.validate()) {
+                        if (_image?.path == "_imageUrl" || _image == null) {
+                          await _uploadImageToFirebase();
+                        }
+                        await addProductToFirestore(productData);
+
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Product added successfully!'),
+                          ),
+                        );
                       }
-
-                      // Create the product object
-
-                      // Add the product to Firestore
-                      // debugPrint(product.title);
-                      await addProductToFirestore(productData);
-
-                      // Optionally, show a success message or navigate to another screen
+                    }{
+                       // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Product added successfully!'),
+                          content: Text(
+                            'تفقد الاتصال بالانترنت',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       );
                     }
@@ -448,41 +456,3 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 }
-
-
-//------------------------------ the text button to send data to firebase
- //  TextButton(
-                //   child: const Text('OK'),
-                //   onPressed: () async {
-                //     // Validate the form before submission
-                //     if (_key.currentState!.validate()) {
-                //       // Trigger image upload if an image is selected
-                //       if (_image?.path == "_imageUrl" || _image == null) {
-                //         await _uploadImageToFirebase();
-                //       }
-
-                //       // Create the product object
-                //       Product product = Product(
-                //         id: DateTime.now().second.toString(),
-                //         imgUrl: _imageUrl,
-                //         price: _productPrice,
-                //         qunInCarton: _productQuantity,
-                //         title: _productName,
-                //         category: _productCategory,
-                //         script: _productScribt,
-
-                //       );
-
-                //       // Add the product to Firestore
-                //       // debugPrint(product.title);
-                //       await database.addProduct(product);
-
-                //       // Optionally, show a success message or navigate to another screen
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         const SnackBar(
-                //           content: Text('Product added successfully!'),
-                //         ),
-                //       );
-                //     }
-                //   },
-                // ),

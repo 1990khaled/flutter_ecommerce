@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/controllers/database_controller.dart';
 import 'package:flutter_ecommerce/models/orders_model.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/orders_info_list_item.dart';
+
+import '../../widgets/all_orders_list_info.dart';
 
 class AllOrdersPage extends StatefulWidget {
-  
-  const AllOrdersPage({Key? key}) : super(key: key);
+  final String phoneNum;
+ 
+  const AllOrdersPage({super.key, required this.phoneNum,});
 
   @override
   State<AllOrdersPage> createState() => _AllOrdersPageState();
@@ -86,10 +88,8 @@ class _AllOrdersPageState extends State<AllOrdersPage> {
                                     .toList();
                                 // debugPrint("${snapshot.error} ----------------------");
                                 if (products == null || products.isEmpty) {
-                                 
                                   return const Center(
-                                    child: Text("مشاكل بالاتصال")
-                                  );
+                                      child: Text("لا يوجد بيانات"));
                                 }
 
                                 return Builder(builder: (context) {
@@ -98,8 +98,10 @@ class _AllOrdersPageState extends State<AllOrdersPage> {
                                     itemCount: products.length,
                                     itemBuilder: (_, int index) => Padding(
                                       padding: const EdgeInsets.all(1.0),
-                                      child: OrdersInfoListTime(
+                                      child: AllOrdersListInformation(
                                         ordersModel: products[index],
+                                        phoneNum: widget.phoneNum,
+                                        index: index,
                                       ),
                                     ),
                                   );
