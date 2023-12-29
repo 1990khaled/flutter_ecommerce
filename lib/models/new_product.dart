@@ -8,6 +8,7 @@ class NewProduct {
   final int qunInCarton;
   final int maximum;
   final int minimum;
+  
   NewProduct({
     required this.id,
     required this.title,
@@ -18,6 +19,7 @@ class NewProduct {
     this.script = "الكمية داخل العبوة ",
     this.maximum = 5,
     this.minimum = 1,
+    
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class NewProduct {
       'script': script,
       'maximum': maximum,
       'minimum': minimum,
+      
     };
   }
 
@@ -45,6 +48,7 @@ class NewProduct {
       script: map['script'] as String,
       maximum: map['maximum'] as int,
       minimum: map['minimum'] as int,
+
     );
   }
 }

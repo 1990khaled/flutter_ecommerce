@@ -8,18 +8,19 @@ class Product {
   final int qunInCarton;
   final int maximum;
   final int minimum;
-
-  Product(
-      {required this.id,
-      required this.title,
-      required this.price,
-      required this.imgUrl,
-      this.category = 'Other',
-      required this.qunInCarton,
-      this.script = "الكمية داخل العبوة ",
-      this.maximum = 10,
-      this.minimum = 1,
-      });
+  bool isFavourite;
+  Product({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.imgUrl,
+    this.category = 'Other',
+    required this.qunInCarton,
+    this.script = "الكمية داخل العبوة ",
+    this.maximum = 10,
+    this.minimum = 1,
+    this.isFavourite = false,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -32,6 +33,7 @@ class Product {
       'script': script,
       'maximum': maximum,
       'minimum': minimum,
+      // 'isFavourite': isFavourite,
     };
   }
 
@@ -46,6 +48,7 @@ class Product {
       script: map['script'] as String,
       maximum: map['maximum'] as int,
       minimum: map['minimum'] as int,
+      // isFavourite: map['isFavourite'] as bool,
     );
   }
 }

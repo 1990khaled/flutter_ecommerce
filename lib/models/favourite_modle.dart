@@ -8,7 +8,7 @@ class FavouriteModel {
   final String script;
   final int maximum;
   final int minimum;
-
+ bool isFavourite;
   FavouriteModel({
     required this.id,
     required this.title,
@@ -19,6 +19,7 @@ class FavouriteModel {
     this.script = "الكمية داخل العبوة ",
     this.maximum = 5,
     this.minimum = 1,
+    required this.isFavourite,
   });
 
   Map<String, dynamic> toMap() {
@@ -30,6 +31,7 @@ class FavouriteModel {
     result.addAll({'price': price});
     result.addAll({'imgUrl': imgUrl});
     result.addAll({'qunInCarton': qunInCarton});
+    result.addAll({'isFavourite': isFavourite,});
     result.addAll({
       'script': script,
     });
@@ -53,6 +55,7 @@ result.addAll({
       script: map['script'] ?? '',
       maximum: map['maximum'] ?? 0,
       minimum: map['minimum'] ?? 0,
+      isFavourite: map['isFavourite'] ?? false,
     );
   }
 }

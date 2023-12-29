@@ -21,11 +21,13 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
     final database = Provider.of<Database>(context);
     final size = MediaQuery.of(context).size;
     final Product product = Product(
-        id: widget.favouriteModel.id,
-        title: widget.favouriteModel.title,
-        price: widget.favouriteModel.price,
-        imgUrl: widget.favouriteModel.imgUrl,
-        qunInCarton: widget.favouriteModel.qunInCarton);
+      id: widget.favouriteModel.id,
+      title: widget.favouriteModel.title,
+      price: widget.favouriteModel.price,
+      imgUrl: widget.favouriteModel.imgUrl,
+      qunInCarton: widget.favouriteModel.qunInCarton,
+      isFavourite: widget.favouriteModel.isFavourite,
+    );
     return InkWell(
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -95,9 +97,7 @@ class _FavouriteListItemState extends State<FavouriteListItem> {
                 ),
                 trailing: IconButton(
                     onPressed: () async {
-
-                     await database.removeFromFavourite(widget.favouriteModel);
-
+                      await database.removeFromFavourite(widget.favouriteModel);
                     },
                     icon: const Icon(
                       Icons.delete,

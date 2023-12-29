@@ -21,8 +21,6 @@ class NewProductDetails extends StatefulWidget {
 }
 
 class _NewProductDetailsState extends State<NewProductDetails> {
-  bool isFavorite = false;
-
   Future<void> _addToCart(Database database) async {
     try {
       final addToCartProduct = AddToCartModel(
@@ -54,6 +52,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         );
       } else {
         await database.addToCart(addToCartProduct);
+
         // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       }
@@ -77,6 +76,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
         qunInCarton: widget.product.qunInCarton,
         script: widget.product.script,
         maximum: widget.product.maximum,
+        isFavourite: widget.product.isFavourite,
       );
 
       // Check if the item is already in the favorite
@@ -179,7 +179,7 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         style:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.red,
+                                  color: Colors.deepOrange,
                                 ),
                       ),
                       subtitle: Text(
@@ -202,11 +202,11 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () async{
-                            setState(() {
-                              isFavorite = !isFavorite;
-                            });
+                          onTap: () async {
                             await _addToFavourite(database);
+                            setState(() {
+                              widget.product.isFavourite = true;
+                            });
                           },
                           child: SizedBox(
                             height: 60,
@@ -219,11 +219,11 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
-                                  isFavorite
+                                  widget.product.isFavourite == true
                                       ? Icons.favorite
                                       : Icons.favorite_border_outlined,
-                                  color: isFavorite
-                                      ? Colors.redAccent
+                                  color: widget.product.isFavourite
+                                      ? Colors.deepOrange
                                       : Colors.black45,
                                   size: 30,
                                 ),
@@ -233,8 +233,8 @@ class _NewProductDetailsState extends State<NewProductDetails> {
                         ),
                         SmallMainButton(
                             text: 'اضافة الى طلبيتك',
-                            onTap: ()async {
-                            await _addToCart(database);
+                            onTap: () async {
+                              await _addToCart(database);
                             }
                             // hasCircularBorder: true,
                             ),

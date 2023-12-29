@@ -14,7 +14,6 @@ import '../views/pages/new_product_details.dart';
 import '../views/pages/profle_page.dart';
 import '../views/pages/register_page.dart';
 
-
 Route<dynamic> onGenerate(RouteSettings settings) {
   switch (settings.name) {
     case AppRoutes.registerPageRoute:
@@ -54,8 +53,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.profilePage:
       final database = settings.arguments as Database;
       return CupertinoPageRoute(
-        builder: (_) =>
-            Provider<Database>.value(value: database, child: const ProfilePage()),
+        builder: (_) => Provider<Database>.value(
+            value: database, child: const ProfilePage()),
         settings: settings,
       );
     //-----------------------------------
@@ -87,6 +86,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final args = settings.arguments as Map<String, dynamic>;
       final product = args['product'];
       final database = args['database'];
+      
       return MaterialPageRoute(
         builder: (_) => Provider<Database>.value(
           value: database,
